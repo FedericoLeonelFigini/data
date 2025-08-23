@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DATA • Servicios</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <!-- Header / Nav -->
+  <header class="site-header">
+    <nav class="navbar container">
+      <a href="#" class="brand">DATA</a>
+      <button class="burger" aria-label="Abrir menú" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="#frontend">Frontend</a></li>
+        <li><a href="#backend">Backend</a></li>
+        <li><a href="#fullstack">Fullstack</a></li>
+        <li><a href="#apps">Apps</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <h1>Servicios de Desarrollo</h1>
+      <p>Elegí tu plan, indicá si sos <strong>Particular</strong> o <strong>Empresa</strong> y consultá por WhatsApp.</p>
+    </section>
+
+    <!-- FRONTEND -->
+    <section id="frontend" class="section">
+      <h2>Frontend</h2>
+      <div class="grid" id="frontend-grid">
+        <!-- Tarjetas Frontend (cargadas desde JS con la lista acordada) -->
+      </div>
+    </section>
+
+    <!-- BACKEND -->
+    <section id="backend" class="section">
+      <h2>Backend</h2>
+      <div class="grid" id="backend-grid">
+        <!-- 10 servicios aleatorios -->
+      </div>
+    </section>
+
+    <!-- FULLSTACK -->
+    <section id="fullstack" class="section">
+      <h2>Fullstack</h2>
+      <div class="grid" id="fullstack-grid">
+        <!-- 10 servicios aleatorios -->
+      </div>
+    </section>
+
+    <!-- APPS -->
+    <section id="apps" class="section">
+      <h2>Apps</h2>
+      <div class="grid" id="apps-grid">
+        <!-- 10 servicios aleatorios -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>© <span id="year"></span> DATA — Desarrollo web a medida</p>
+  </footer>
+
+  <!-- Botón flotante WhatsApp -->
+  <a
+    class="btn-wpp"
+    href="https://wa.me/541141999497?text=Hola%20DATA%2C%20quiero%20hacer%20una%20consulta."
+    target="_blank"
+    rel="noopener"
+    aria-label="Consultar por WhatsApp"
+  >
+    <!-- Círculo verde y teléfono negro -->
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="30" />
+      <path d="M22 18 h20 a4 4 0 0 1 4 4 v20 a4 4 0 0 1-4 4 H22 a4 4 0 0 1-4-4 V22 a4 4 0 0 1 4-4zm9 28h2" />
+      <rect x="26" y="22" width="12" height="18" rx="2" ry="2" />
+    </svg>
+  </a>
+
+  <script>
+    // ===== Utilidades =====
+    const ARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
+
+    const WPP_BASE = 'https://wa.me/541141999497?text=';
+
+    function precioConTipo(base, tipo) {
+      return tipo === 'empresa' ? Math.round(base * 1.5) : base;
+    }
+
+    function linkWpp(servicio, tipo, precioFinal) {
+      const mensaje =
+        `Hola DATA, quiero consultar por: ${servicio} | Tipo: ${tipo.toUpperCase()} | Precio: ${ARS.format(precioFinal)}.`;
+      return WPP_BASE + encodeURIComponent(mensaje);
+    }
+
+    function crearTarjeta({ nombre, descripcion, precioBase, categoria }) {
+      const id = nombre.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+      const tipoId = `tipo-${id}`;
+
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-head">
+          <span class="badge">${categoria}</span>
+          <h3>${nombre}</h3>
+          <p class="desc">${descripcion}</p>
+        </div>
+        <div class="card-body">
+          <label class="tipo">
+            <input type="radio" name="${tipoId}" value="particular" checked />
+            Particular
+          </label>
+          <label class="tipo">
+            <input type="radio" name="${tipoId}" value="empresa" />
+            Empresa (+50%)
+          </label>
+
+          <div class="precio">
+            <span>Precio:</span>
+            <strong class="monto" data-precio="${precioBase}">${ARS.format(precioBase)}</strong>
+          </div>
+        </div>
+        <div class="card-foot">
+          <a class="btn" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+        </div>
+      `;
+
+      // Interacciones
+      const radios = card.querySelectorAll(`input[name="${tipoId}"]`);
+      const montoEl = card.querySelector('.monto');
+      const btn = card.querySelector('.btn');
+
+      function sync() {
+        const tipo = [...radios].find(r => r.checked).value;
+        const base = Number(montoEl.dataset.precio);
+        const final = precioConTipo(base, tipo);
+        montoEl.textContent = ARS.format(final);
+        btn.href = linkWpp(nombre, tipo, final);
+      }
+
+      radios.forEach(r => r.addEventListener('change', sync));
+      sync(); // inicial
+
+      return card;
+    }
+
+    // ===== Datos =====
+    // FRONTEND: los que venimos usando
+    const FRONTEND_SERVICIOS = [
+      { nombre: 'Landing Page Express', precio: 50000, desc: 'Una página rápida y efectiva para captar clientes.' },
+      { nombre: 'One Page Personal', precio: 100000, desc: 'Carta de presentación profesional en una sola página.' },
+      { nombre: 'Maquetación HTML/CSS', precio: 100000, desc: 'Corto el diseño a código semántico y responsive.' },
+      { nombre: 'Sitio Web Corporativo', precio: 250000, desc: 'Estructura institucional, secciones y componentes UI.' },
+      { nombre: 'Tienda Online Estática', precio: 250000, desc: 'Catálogo con carrito básico y páginas de producto.' },
+      { nombre: 'Optimización Web', precio: 275000, desc: 'Mejoras de performance, SEO técnico y accesibilidad.' },
+      { nombre: 'Portfolios Creativos', precio: 500000, desc: 'Portfolio visual con efectos y grid de proyectos.' },
+      { nombre: 'Blogs o Revistas Digitales', precio: 500000, desc: 'Listado, detalle de notas, buscador y categorías.' },
+      { nombre: 'Micrositios Interactivos', precio: 500000, desc: 'Secciones promocionales con microinteracciones.' },
+      { nombre: 'Rediseño Moderno', precio: 600000, desc: 'Actualización visual, tipografías y componentes.' }
+    ];
+
+    // Generadores aleatorios
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function crearListaAleatoria(n, baseNombre, rangoMin, rangoMax, descripciones) {
+      return Array.from({ length: n }, (_, i) => {
+        const nombre = `${baseNombre} ${i + 1}`;
+        const precio = rand(rangoMin, rangoMax);
+        const desc = descripciones[rand(0, descripciones.length - 1)];
+        return { nombre, precio, desc };
+      });
+    }
+
+    const DESC_BACKEND = [
+      'APIs REST con autenticación y rate limiting.',
+      'Integración con bases de datos SQL/NoSQL.',
+      'Procesos en segundo plano y colas de trabajo.',
+      'Panel de administración seguro.',
+      'Integración con pagos y facturación.',
+      'Servicios de notificaciones y emails.',
+      'Microservicios y comunicación interna.',
+      'Logs, métricas y observabilidad.',
+      'Hardening, roles y permisos.',
+      'Optimización de consultas y cachés.'
+    ];
+
+    const DESC_FULLSTACK = [
+      'Stack completo con SSR e hidratación.',
+      'SPA + API con auth JWT/Session.',
+      'Diseño UI y componentes reutilizables.',
+      'Internacionalización y SEO técnico.',
+      'Formularios complejos con validación.',
+      'Deployment en Vercel/Render/Docker.',
+      'Estado global y caching de datos.',
+      'Subida de archivos e imágenes.',
+      'Rendimiento e imágenes responsivas.',
+      'Rutas protegidas y middlewares.'
+    ];
+
+    const DESC_APPS = [
+      'App mobile con autenticación.',
+      'Notificaciones push y deeplinks.',
+      'Sincronización offline/online.',
+      'Mapa y geolocalización.',
+      'Integración con cámara/galería.',
+      'Tienda in-app y suscripciones.',
+      'Chat en tiempo real.',
+      'Temas claro/oscuro.',
+      'Tests y distribución interna.',
+      'Publicación en stores.'
+    ];
+
+    // ===== Render =====
+    function render() {
+      // Frontend
+      const fg = document.getElementById('frontend-grid');
+      FRONTEND_SERVICIOS.forEach(s => {
+        fg.appendChild(
+          crearTarjeta({
+            nombre: s.nombre,
+            descripcion: s.desc,
+            precioBase: s.precio,
+            categoria: 'Frontend'
+          })
+        );
+      });
+
+      // Backend aleatorios
+      const bg = document.getElementById('backend-grid');
+      crearListaAleatoria(10, 'Servicio Backend', 150000, 600000, DESC_BACKEND).forEach(s => {
+        bg.appendChild(
+          crearTarjeta({
+            nombre: s.nombre,
+            descripcion: s.desc,
+            precioBase: s.precio,
+            categoria: 'Backend'
+          })
+        );
+      });
+
+      // Fullstack aleatorios
+      const fsg = document.getElementById('fullstack-grid');
+      crearListaAleatoria(10, 'Proyecto Fullstack', 250000, 900000, DESC_FULLSTACK).forEach(s => {
+        fsg.appendChild(
+          crearTarjeta({
+            nombre: s.nombre,
+            descripcion: s.desc,
+            precioBase: s.precio,
+            categoria: 'Fullstack'
+          })
+        );
+      });
+
+      // Apps aleatorios
+      const ag = document.getElementById('apps-grid');
+      crearListaAleatoria(10, 'App', 300000, 1000000, DESC_APPS).forEach(s => {
+        ag.appendChild(
+          crearTarjeta({
+            nombre: s.nombre,
+            descripcion: s.desc,
+            precioBase: s.precio,
+            categoria: 'Apps'
+          })
+        );
+      });
+    }
+
+    // ===== Navegación móvil =====
+    const burger = document.querySelector('.burger');
+    const nav = document.querySelector('.nav-links');
+    burger.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    // Cerrar menú al hacer click en un enlace
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.nav-links a')) {
+        nav.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Año en footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Inicializar
+    render();
+  </script>
+
+    <footer class="site-footer">
+      <a href="ayuda.html">Ayuda</a> |
+      <a href="quienes.html">¿Quiénes somos?</a>
+    </nav>
+  </footer>
+ 
+</body>
+</html>
