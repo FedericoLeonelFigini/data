@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DATA • Servicios</title>
+  <title>DATA • Servicios y precios</title>
   <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
@@ -31,39 +31,51 @@
     <!-- FRONTEND -->
     <section id="frontend" class="section">
       <h2>Frontend</h2>
-      <div class="grid" id="frontend-grid">
-        <!-- Tarjetas Frontend (cargadas desde JS con la lista acordada) -->
-      </div>
+      <p class="section-desc">
+        La parte visible del sitio: diseño, maquetación HTML/CSS, interacciones con JavaScript, responsive,
+        performance y accesibilidad para una gran experiencia de usuario.
+      </p>
+      <div class="grid" id="frontend-grid"></div>
     </section>
 
     <!-- BACKEND -->
     <section id="backend" class="section">
       <h2>Backend</h2>
-      <div class="grid" id="backend-grid">
-        <!-- 10 servicios aleatorios -->
-      </div>
+      <p class="section-desc">
+        Lado servidor: APIs, bases de datos, autenticación, seguridad e integración con pagos y servicios.
+        Hace que todo lo que ves en el Frontend funcione de forma confiable.
+      </p>
+      <div class="grid" id="backend-grid"></div>
     </section>
 
     <!-- FULLSTACK -->
     <section id="fullstack" class="section">
       <h2>Fullstack</h2>
-      <div class="grid" id="fullstack-grid">
-        <!-- 10 servicios aleatorios -->
-      </div>
+      <p class="section-desc">
+        Desarrollo extremo a extremo: UI + lógica de negocio + base de datos + despliegue. Ideal para proyectos donde
+        un mismo equipo cubre todo el flujo.
+      </p>
+      <div class="grid" id="fullstack-grid"></div>
     </section>
 
     <!-- APPS -->
     <section id="apps" class="section">
       <h2>Apps</h2>
-      <div class="grid" id="apps-grid">
-        <!-- 10 servicios aleatorios -->
-      </div>
+      <p class="section-desc">
+        Aplicaciones móviles o de escritorio (nativas, híbridas o webapps): notificaciones, mapas, cámara,
+        sincronización offline y publicación en stores.
+      </p>
+      <div class="grid" id="apps-grid"></div>
     </section>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer único -->
   <footer class="site-footer">
     <p>© <span id="year"></span> DATA — Desarrollo web a medida</p>
+    <nav class="footer-links">
+      <a href="ayuda.html">Ayuda</a> |
+      <a href="quienes.html">¿Quiénes somos?</a>
+    </nav>
   </footer>
 
   <!-- Botón flotante WhatsApp -->
@@ -74,7 +86,6 @@
     rel="noopener"
     aria-label="Consultar por WhatsApp"
   >
-    <!-- Círculo verde y teléfono negro -->
     <svg viewBox="0 0 64 64" aria-hidden="true">
       <circle cx="32" cy="32" r="30" />
       <path d="M22 18 h20 a4 4 0 0 1 4 4 v20 a4 4 0 0 1-4 4 H22 a4 4 0 0 1-4-4 V22 a4 4 0 0 1 4-4zm9 28h2" />
@@ -85,23 +96,18 @@
   <script>
     // ===== Utilidades =====
     const ARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
-
     const WPP_BASE = 'https://wa.me/541141999497?text=';
 
     function precioConTipo(base, tipo) {
       return tipo === 'empresa' ? Math.round(base * 1.5) : base;
     }
-
     function linkWpp(servicio, tipo, precioFinal) {
-      const mensaje =
-        `Hola DATA, quiero consultar por: ${servicio} | Tipo: ${tipo.toUpperCase()} | Precio: ${ARS.format(precioFinal)}.`;
+      const mensaje = `Hola DATA, quiero consultar por: ${servicio} | Tipo: ${tipo.toUpperCase()} | Precio: ${ARS.format(precioFinal)}.`;
       return WPP_BASE + encodeURIComponent(mensaje);
     }
-
     function crearTarjeta({ nombre, descripcion, precioBase, categoria }) {
       const id = nombre.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
       const tipoId = `tipo-${id}`;
-
       const card = document.createElement('article');
       card.className = 'card';
       card.innerHTML = `
@@ -117,9 +123,8 @@
           </label>
           <label class="tipo">
             <input type="radio" name="${tipoId}" value="empresa" />
-            Empresa (+50%)
+            Empresa
           </label>
-
           <div class="precio">
             <span>Precio:</span>
             <strong class="monto" data-precio="${precioBase}">${ARS.format(precioBase)}</strong>
@@ -129,12 +134,9 @@
           <a class="btn" target="_blank" rel="noopener">Consultar por WhatsApp</a>
         </div>
       `;
-
-      // Interacciones
       const radios = card.querySelectorAll(`input[name="${tipoId}"]`);
       const montoEl = card.querySelector('.monto');
       const btn = card.querySelector('.btn');
-
       function sync() {
         const tipo = [...radios].find(r => r.checked).value;
         const base = Number(montoEl.dataset.precio);
@@ -142,15 +144,12 @@
         montoEl.textContent = ARS.format(final);
         btn.href = linkWpp(nombre, tipo, final);
       }
-
       radios.forEach(r => r.addEventListener('change', sync));
       sync(); // inicial
-
       return card;
     }
 
     // ===== Datos =====
-    // FRONTEND: los que venimos usando
     const FRONTEND_SERVICIOS = [
       { nombre: 'Landing Page Express', precio: 50000, desc: 'Una página rápida y efectiva para captar clientes.' },
       { nombre: 'One Page Personal', precio: 100000, desc: 'Carta de presentación profesional en una sola página.' },
@@ -164,9 +163,7 @@
       { nombre: 'Rediseño Moderno', precio: 600000, desc: 'Actualización visual, tipografías y componentes.' }
     ];
 
-    // Generadores aleatorios
     function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
-
     function crearListaAleatoria(n, baseNombre, rangoMin, rangoMax, descripciones) {
       return Array.from({ length: n }, (_, i) => {
         const nombre = `${baseNombre} ${i + 1}`;
@@ -188,7 +185,6 @@
       'Hardening, roles y permisos.',
       'Optimización de consultas y cachés.'
     ];
-
     const DESC_FULLSTACK = [
       'Stack completo con SSR e hidratación.',
       'SPA + API con auth JWT/Session.',
@@ -201,7 +197,6 @@
       'Rendimiento e imágenes responsivas.',
       'Rutas protegidas y middlewares.'
     ];
-
     const DESC_APPS = [
       'App mobile con autenticación.',
       'Notificaciones push y deeplinks.',
@@ -216,58 +211,36 @@
     ];
 
     // ===== Render =====
+    function crearTarjetaCategoria(lista, contenedorId, categoria) {
+      const cont = document.getElementById(contenedorId);
+      lista.forEach(s => {
+        cont.appendChild(
+          crearTarjeta({
+            nombre: s.nombre,
+            descripcion: s.desc,
+            precioBase: s.precio,
+            categoria
+          })
+        );
+      });
+    }
+
     function render() {
-      // Frontend
-      const fg = document.getElementById('frontend-grid');
-      FRONTEND_SERVICIOS.forEach(s => {
-        fg.appendChild(
-          crearTarjeta({
-            nombre: s.nombre,
-            descripcion: s.desc,
-            precioBase: s.precio,
-            categoria: 'Frontend'
-          })
-        );
-      });
-
-      // Backend aleatorios
-      const bg = document.getElementById('backend-grid');
-      crearListaAleatoria(10, 'Servicio Backend', 150000, 600000, DESC_BACKEND).forEach(s => {
-        bg.appendChild(
-          crearTarjeta({
-            nombre: s.nombre,
-            descripcion: s.desc,
-            precioBase: s.precio,
-            categoria: 'Backend'
-          })
-        );
-      });
-
-      // Fullstack aleatorios
-      const fsg = document.getElementById('fullstack-grid');
-      crearListaAleatoria(10, 'Proyecto Fullstack', 250000, 900000, DESC_FULLSTACK).forEach(s => {
-        fsg.appendChild(
-          crearTarjeta({
-            nombre: s.nombre,
-            descripcion: s.desc,
-            precioBase: s.precio,
-            categoria: 'Fullstack'
-          })
-        );
-      });
-
-      // Apps aleatorios
-      const ag = document.getElementById('apps-grid');
-      crearListaAleatoria(10, 'App', 300000, 1000000, DESC_APPS).forEach(s => {
-        ag.appendChild(
-          crearTarjeta({
-            nombre: s.nombre,
-            descripcion: s.desc,
-            precioBase: s.precio,
-            categoria: 'Apps'
-          })
-        );
-      });
+      crearTarjetaCategoria(
+        FRONTEND_SERVICIOS.map(s => ({ ...s, desc: s.desc })), 'frontend-grid', 'Frontend'
+      );
+      crearListaAleatoria(10, 'Servicio Backend', 150000, 600000, DESC_BACKEND)
+        .forEach(s => document.getElementById('backend-grid').appendChild(
+          crearTarjeta({ nombre: s.nombre, descripcion: s.desc, precioBase: s.precio, categoria: 'Backend' })
+        ));
+      crearListaAleatoria(10, 'Proyecto Fullstack', 250000, 900000, DESC_FULLSTACK)
+        .forEach(s => document.getElementById('fullstack-grid').appendChild(
+          crearTarjeta({ nombre: s.nombre, descripcion: s.desc, precioBase: s.precio, categoria: 'Fullstack' })
+        ));
+      crearListaAleatoria(10, 'App', 300000, 1000000, DESC_APPS)
+        .forEach(s => document.getElementById('apps-grid').appendChild(
+          crearTarjeta({ nombre: s.nombre, descripcion: s.desc, precioBase: s.precio, categoria: 'Apps' })
+        ));
     }
 
     // ===== Navegación móvil =====
@@ -277,7 +250,6 @@
       const open = nav.classList.toggle('open');
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-    // Cerrar menú al hacer click en un enlace
     document.addEventListener('click', (e) => {
       if (e.target.closest('.nav-links a')) {
         nav.classList.remove('open');
@@ -291,12 +263,5 @@
     // Inicializar
     render();
   </script>
-
-    <footer class="site-footer">
-      <a href="ayuda.html">Ayuda</a> |
-      <a href="quienes.html">¿Quiénes somos?</a>
-    </nav>
-  </footer>
- 
 </body>
 </html>
