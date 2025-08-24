@@ -10,7 +10,7 @@
   <!-- Header / Nav -->
   <header class="site-header">
     <nav class="navbar container">
-      <a href="#" class="brand">DATA</a>
+      <a href="index.html" class="brand">DATA</a>
       <button class="burger" aria-label="Abrir menú" aria-expanded="false">☰</button>
       <ul class="nav-links">
         <li><a href="#frontend">Frontend</a></li>
@@ -25,7 +25,7 @@
     <!-- Hero -->
     <section class="hero">
       <h1>Servicios de Desarrollo</h1>
-      <p>Elegí tu plan, indicá si sos <strong>Particular</strong> o <strong>Empresa</strong> y consultá por WhatsApp.</p>
+      <p>Elegí tu plan, indicá si sos <strong>Particular</strong>, <strong>Negocios</strong> o <strong>Empresa</strong> y consultá por WhatsApp.</p>
     </section>
 
     <!-- FRONTEND -->
@@ -69,9 +69,9 @@
     </section>
   </main>
 
-  <!-- Footer único -->
+  <!-- Footer -->
   <footer class="site-footer">
-    <p>© <span id="year"></span> DATA — Gracias por visitarnos</p>
+    <p>© 2025 DATA — Desarrollo web a medida</p>
   </footer>
 
   <!-- Botón flotante WhatsApp -->
@@ -94,16 +94,123 @@
     const ARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
     const WPP_BASE = 'https://wa.me/541141999497?text=';
 
+    // Mapeo de incrementos: particular = 1.0×, negocios = 1.5×, empresa = 2.5×
     function precioConTipo(base, tipo) {
-      return tipo === 'empresa' ? Math.round(base * 1.5) : base;
+      const mult = { particular: 1.0, negocios: 1.5, empresa: 2.5 }[tipo] ?? 1.0;
+      return Math.round(base * mult);
     }
     function linkWpp(servicio, tipo, precioFinal) {
       const mensaje = `Hola DATA, quiero consultar por: ${servicio} | Tipo: ${tipo.toUpperCase()} | Precio: ${ARS.format(precioFinal)}.`;
       return WPP_BASE + encodeURIComponent(mensaje);
     }
-    function crearTarjeta({ nombre, descripcion, precioBase, categoria }) {
+
+    // ===== Info extendida (Frontend específica) =====
+    const INFO_FRONTEND = {
+      'Landing Page Express': [
+        'Secciones: Hero, Beneficios, Prueba social, CTA.',
+        'Entrega estimada en 72 h con 1 revisión.',
+        'Formulario simple conectado a tu email o WhatsApp.'
+      ],
+      'One Page Personal': [
+        'Secciones: Sobre mí, Servicios, Portfolio, Contacto.',
+        'Optimizada para SEO básico y redes sociales (Open Graph).',
+        'Hasta 2 revisiones incluidas.'
+      ],
+      'Maquetación HTML/CSS': [
+        'HTML semántico (BEM) y CSS modular.',
+        'Responsive desde 360px hasta escritorio.',
+        'Accesibilidad nivel AA y “pixel perfect”.'
+      ],
+      'Sitio Web Corporativo': [
+        'Hasta 5 secciones: Inicio, Empresa, Servicios, Novedades, Contacto.',
+        'Opción multi-idioma y blog básico.',
+        'Mapa de sitio y SEO técnico inicial.'
+      ],
+      'Tienda Online Estática': [
+        'Catálogo inicial hasta 20 productos con filtros.',
+        'Carrito local (sin pasarela de pago completa).',
+        'Migrable a e-commerce completo más adelante.'
+      ],
+      'Optimización Web': [
+        'Mejoras para Lighthouse +90 (Performance/SEO/Best Practices).',
+        'Imágenes optimizadas, lazy-load y minificación.',
+        'Monitoreo básico post-release.'
+      ],
+      'Portfolios Creativos': [
+        'Grid tipo Masonry y lightbox para imágenes/videos.',
+        'Animaciones sutiles y navegación fluida.',
+        'Carga diferida de assets pesados.'
+      ],
+      'Blogs o Revistas Digitales': [
+        'Notas con categorías, etiquetas y buscador.',
+        'RSS y marcado estructurado básico.',
+        'Editor amigable para publicar rápido.'
+      ],
+      'Micrositios Interactivos': [
+        'Landing de campaña con interacciones y contador.',
+        'Se integra con Analytics y píxeles publicitarios.',
+        'Ideal para promociones temporales.'
+      ],
+      'Rediseño Moderno': [
+        'Auditoría UI/UX y sistema de diseño.',
+        'Tipografías, paleta, componentes y migración.',
+        'Plan de redirect y no-pérdida de SEO.'
+      ]
+    };
+
+    function generarInfoExtra(nombre, categoria) {
+      const base = {
+        Backend: [
+          `API REST para “${nombre}” con endpoints versionados.`,
+          'Autenticación (JWT/Session) y rate-limit.',
+          'Base de datos SQL/NoSQL + migraciones.',
+          'Documentación Swagger y tests básicos.',
+          'Dockerfile listo para deploy.'
+        ],
+        Fullstack: [
+          `SPA + API para “${nombre}” con auth y roles.`,
+          'SSR/hidratación e internacionalización opcional.',
+          'Panel admin con CRUD y subida de archivos.',
+          'Deploy en Vercel/Render/Docker + entorno .env.',
+          'Monitoreo de errores y métricas iniciales.'
+        ],
+        Apps: [
+          `App “${nombre}” (Android/iOS) con login.`,
+          'Soporte offline/online y sincronización.',
+          'Push notifications y deep links.',
+          'Módulos: cámara, galería y mapas.',
+          'Setup para publicación en stores.'
+        ]
+      };
+      return base[categoria] || [`Detalles de “${nombre}”.`];
+    }
+
+    function crearLista(features) {
+      const ul = document.createElement('ul');
+      ul.className = 'features';
+      features.forEach(f => { const li = document.createElement('li'); li.textContent = f; ul.appendChild(li); });
+      return ul;
+    }
+
+    // ===== Overlay de distorsión =====
+    let currentOpenCard = null;
+    let overlay = null;
+    function ensureOverlay() {
+      if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.id = 'distort-overlay';
+        overlay.className = 'distort-overlay';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', () => { if (currentOpenCard && currentOpenCard._collapse) currentOpenCard._collapse(); });
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && currentOpenCard && currentOpenCard._collapse) currentOpenCard._collapse(); });
+      }
+    }
+
+    // ===== Tarjeta =====
+    function crearTarjeta({ nombre, descripcion, precioBase, categoria, infoExtra }) {
       const id = nombre.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
       const tipoId = `tipo-${id}`;
+
       const card = document.createElement('article');
       card.className = 'card';
       card.innerHTML = `
@@ -113,35 +220,86 @@
           <p class="desc">${descripcion}</p>
         </div>
         <div class="card-body">
-          <label class="tipo">
-            <input type="radio" name="${tipoId}" value="particular" checked />
-            Particular
-          </label>
-          <label class="tipo">
-            <input type="radio" name="${tipoId}" value="empresa" />
-            Empresa
-          </label>
+          <div class="tipos">
+            <label class="tipo">
+              <input type="radio" name="${tipoId}" value="particular" checked />
+              Particular
+            </label>
+            <label class="tipo">
+              <input type="radio" name="${tipoId}" value="negocios" />
+              Negocios
+            </label>
+            <label class="tipo">
+              <input type="radio" name="${tipoId}" value="empresa" />
+              Empresa
+            </label>
+          </div>
           <div class="precio">
             <span>Precio:</span>
             <strong class="monto" data-precio="${precioBase}">${ARS.format(precioBase)}</strong>
           </div>
+          <div class="more" hidden aria-hidden="true"></div>
         </div>
         <div class="card-foot">
-          <a class="btn" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+          <div class="actions">
+            <button class="btn btn-outline btn-info" type="button" aria-expanded="false" aria-controls="more-${id}">
+              Más info
+            </button>
+            <a class="btn" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+          </div>
         </div>
       `;
+
+      // Rellenar "más info"
+      const more = card.querySelector('.more');
+      more.id = `more-${id}`;
+      more.appendChild(crearLista(infoExtra));
+
+      // Interacciones precio/whatsapp
       const radios = card.querySelectorAll(`input[name="${tipoId}"]`);
       const montoEl = card.querySelector('.monto');
-      const btn = card.querySelector('.btn');
-      function sync() {
+      const btnWpp = card.querySelector('.btn:not(.btn-outline)');
+      const btnInfo = card.querySelector('.btn-info');
+
+      function syncPrecioYLink() {
         const tipo = [...radios].find(r => r.checked).value;
         const base = Number(montoEl.dataset.precio);
         const final = precioConTipo(base, tipo);
         montoEl.textContent = ARS.format(final);
-        btn.href = linkWpp(nombre, tipo, final);
+        btnWpp.href = linkWpp(nombre, tipo, final);
       }
-      radios.forEach(r => r.addEventListener('change', sync));
-      sync(); // inicial
+      radios.forEach(r => r.addEventListener('change', syncPrecioYLink));
+      syncPrecioYLink();
+
+      // Abrir/cerrar "Más info" con overlay de distorsión
+      function expand() {
+        if (currentOpenCard && currentOpenCard !== card && currentOpenCard._collapse) {
+          currentOpenCard._collapse(true);
+        }
+        ensureOverlay();
+        more.removeAttribute('hidden'); more.setAttribute('aria-hidden', 'false');
+        btnInfo.setAttribute('aria-expanded', 'true');
+        btnInfo.textContent = 'Menos info';
+        card.classList.add('card--focused');
+        document.body.classList.add('modal-active');
+        currentOpenCard = card;
+      }
+      function collapse(silent = false) {
+        more.setAttribute('hidden', ''); more.setAttribute('aria-hidden', 'true');
+        btnInfo.setAttribute('aria-expanded', 'false');
+        btnInfo.textContent = 'Más info';
+        card.classList.remove('card--focused');
+        if (currentOpenCard === card) currentOpenCard = null;
+        if (!currentOpenCard) document.body.classList.remove('modal-active');
+        if (!silent && overlay) overlay.focus?.();
+      }
+      card._collapse = collapse;
+
+      btnInfo.addEventListener('click', () => {
+        const isHidden = more.hasAttribute('hidden');
+        isHidden ? expand() : collapse();
+      });
+
       return card;
     }
 
@@ -207,36 +365,50 @@
     ];
 
     // ===== Render =====
-    function crearTarjetaCategoria(lista, contenedorId, categoria) {
-      const cont = document.getElementById(contenedorId);
-      lista.forEach(s => {
-        cont.appendChild(
+    function render() {
+      // Frontend
+      const fg = document.getElementById('frontend-grid');
+      FRONTEND_SERVICIOS.forEach(s => {
+        fg.appendChild(
           crearTarjeta({
-            nombre: s.nombre,
-            descripcion: s.desc,
-            precioBase: s.precio,
-            categoria
+            nombre: s.nombre, descripcion: s.desc, precioBase: s.precio,
+            categoria: 'Frontend', infoExtra: INFO_FRONTEND[s.nombre] || ['Detalles del servicio.']
           })
         );
       });
-    }
 
-    function render() {
-      crearTarjetaCategoria(
-        FRONTEND_SERVICIOS.map(s => ({ ...s, desc: s.desc })), 'frontend-grid', 'Frontend'
-      );
-      crearListaAleatoria(10, 'Servicio Backend', 150000, 600000, DESC_BACKEND)
-        .forEach(s => document.getElementById('backend-grid').appendChild(
-          crearTarjeta({ nombre: s.nombre, descripcion: s.desc, precioBase: s.precio, categoria: 'Backend' })
-        ));
-      crearListaAleatoria(10, 'Proyecto Fullstack', 250000, 900000, DESC_FULLSTACK)
-        .forEach(s => document.getElementById('fullstack-grid').appendChild(
-          crearTarjeta({ nombre: s.nombre, descripcion: s.desc, precioBase: s.precio, categoria: 'Fullstack' })
-        ));
-      crearListaAleatoria(10, 'App', 300000, 1000000, DESC_APPS)
-        .forEach(s => document.getElementById('apps-grid').appendChild(
-          crearTarjeta({ nombre: s.nombre, descripcion: s.desc, precioBase: s.precio, categoria: 'Apps' })
-        ));
+      // Backend aleatorios
+      const bg = document.getElementById('backend-grid');
+      crearListaAleatoria(10, 'Servicio Backend', 150000, 600000, DESC_BACKEND).forEach(s => {
+        bg.appendChild(
+          crearTarjeta({
+            nombre: s.nombre, descripcion: s.desc, precioBase: s.precio,
+            categoria: 'Backend', infoExtra: generarInfoExtra(s.nombre, 'Backend')
+          })
+        );
+      });
+
+      // Fullstack aleatorios
+      const fsg = document.getElementById('fullstack-grid');
+      crearListaAleatoria(10, 'Proyecto Fullstack', 250000, 900000, DESC_FULLSTACK).forEach(s => {
+        fsg.appendChild(
+          crearTarjeta({
+            nombre: s.nombre, descripcion: s.desc, precioBase: s.precio,
+            categoria: 'Fullstack', infoExtra: generarInfoExtra(s.nombre, 'Fullstack')
+          })
+        );
+      });
+
+      // Apps aleatorios
+      const ag = document.getElementById('apps-grid');
+      crearListaAleatoria(10, 'App', 300000, 1000000, DESC_APPS).forEach(s => {
+        ag.appendChild(
+          crearTarjeta({
+            nombre: s.nombre, descripcion: s.desc, precioBase: s.precio,
+            categoria: 'Apps', infoExtra: generarInfoExtra(s.nombre, 'Apps')
+          })
+        );
+      });
     }
 
     // ===== Navegación móvil =====
@@ -252,9 +424,6 @@
         burger.setAttribute('aria-expanded', 'false');
       }
     });
-
-    // Año en footer
-    document.getElementById('year').textContent = new Date().getFullYear();
 
     // Inicializar
     render();
