@@ -216,4 +216,5 @@ html { scroll-padding-top: calc(var(--header-h) + 12px); }
   border: 0 !important;
   padding: 0 !important;
   box-shadow: none !important;
+  
 }
