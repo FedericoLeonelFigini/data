@@ -31,14 +31,14 @@
       <div class="grid" id="frontend-grid"></div>
     </section>
 
-    <!-- NUEVA SECCIÓN: Calculadora de Inversión -->
+    <!-- CALCULADORA DE INVERSIÓN (sin barra) -->
     <section id="inversion" class="section">
       <div class="calc card">
         <div class="card-head">
           <span class="badge">Plan a medida</span>
-          <h3>¿Cuánto querés invertir en tu proyecto?</h3>
+          <h3>¿Cuánto querés invertir?</h3>
           <p class="desc">
-            Ingresá un monto en ARS (mínimo $5.000). Cada <strong>$10.000</strong> sumamos mejoras.
+            Ingresá un monto en ARS. Los beneficios aumentan cada <strong>$20.000</strong>.
             Hasta <strong>$300.000</strong> es <em>Frontend</em> solamente. Desde <strong>$300.000</strong>, <em>Frontend + Backend</em>.
           </p>
         </div>
@@ -46,10 +46,12 @@
           <div class="calc-inputs">
             <label class="calc-field">
               <span>Monto (ARS)</span>
-              <input id="monto-input" type="number" min="5000" max="5000000" step="10000" placeholder="5000" />
+              <!-- Permitimos cualquier valor: validación en JS -->
+              <input id="monto-input" type="number" placeholder="5000" inputmode="numeric" />
             </label>
-            <input id="monto-range" class="calc-range" type="range" min="5000" max="5000000" step="10000" />
           </div>
+
+          <p id="calc-msg" class="note" aria-live="polite"></p>
 
           <div class="calc-summary">
             <div class="chip">
@@ -169,7 +171,7 @@
       ]
     };
 
-    /* ==== overlay corregido para tarjetas ==== */
+    /* ==== overlay para tarjetas ==== */
     let currentOpenCard=null, overlay=null;
     function ensureOverlay(){
       if(!overlay){
@@ -221,21 +223,46 @@
       const montoEl=card.querySelector('.monto');
       const btnWpp=card.querySelector('.btn:not(.btn-outline)');
       const btnInfo=card.querySelector('.btn-info');
-      function sync(){ const tipo=[...radios].find(r=>r.checked).value; const base=Number(montoEl.dataset.precio); const final=precioConTipo(base,tipo); montoEl.textContent=ARS.format(final); btnWpp.href=linkWpp(nombre,tipo,final); }
+
+      function sync(){
+        const tipo=[...radios].find(r=>r.checked).value;
+        const base=Number(montoEl.dataset.precio);
+        const final=precioConTipo(base,tipo);
+        montoEl.textContent=ARS.format(final);
+        btnWpp.href=linkWpp(nombre,tipo,final);
+      }
       radios.forEach(r=>r.addEventListener('change',sync)); sync();
-      function expand(){ if(currentOpenCard&&currentOpenCard!==card&&currentOpenCard._collapse){currentOpenCard._collapse(true);} ensureOverlay(); more.hidden=false; more.setAttribute('aria-hidden','false'); btnInfo.setAttribute('aria-expanded','true'); btnInfo.textContent='Menos info'; card.classList.add('card--focused'); overlay.classList.add('is-visible'); overlay.removeAttribute('aria-hidden'); document.body.classList.add('modal-active'); currentOpenCard=card; }
-      function collapse(silent=false){ more.hidden=true; more.setAttribute('aria-hidden','true'); btnInfo.setAttribute('aria-expanded','false'); btnInfo.textContent='Más info'; card.classList.remove('card--focused'); if(currentOpenCard===card) currentOpenCard=null; if(!currentOpenCard){ document.body.classList.remove('modal-active'); if(overlay){ overlay.classList.remove('is-visible'); overlay.setAttribute('aria-hidden','true'); } } if(!silent && overlay && overlay.focus) overlay.focus(); }
+
+      function expand(){
+        if(currentOpenCard&&currentOpenCard!==card&&currentOpenCard._collapse){currentOpenCard._collapse(true);}
+        ensureOverlay();
+        more.hidden=false; more.setAttribute('aria-hidden','false');
+        btnInfo.setAttribute('aria-expanded','true'); btnInfo.textContent='Menos info';
+        card.classList.add('card--focused'); overlay.classList.add('is-visible'); overlay.removeAttribute('aria-hidden');
+        document.body.classList.add('modal-active'); currentOpenCard=card;
+      }
+      function collapse(silent=false){
+        more.hidden=true; more.setAttribute('aria-hidden','true');
+        btnInfo.setAttribute('aria-expanded','false'); btnInfo.textContent='Más info';
+        card.classList.remove('card--focused');
+        if(currentOpenCard===card) currentOpenCard=null;
+        if(!currentOpenCard){
+          document.body.classList.remove('modal-active');
+          if(overlay){ overlay.classList.remove('is-visible'); overlay.setAttribute('aria-hidden','true'); }
+        }
+        if(!silent && overlay && overlay.focus) overlay.focus();
+      }
       card._collapse=collapse;
       btnInfo.addEventListener('click',()=>{ const isHidden=more.hasAttribute('hidden')||more.hidden; isHidden?expand():collapse(); });
       return card;
     }
 
     const FRONTEND_SERVICIOS=[
-      { nombre:'Landing Page Express', precio:15000, desc:'Una página simple que cuenta quién sos y tiene un botón grande a WhatsApp para que te contacten.' },
-      { nombre:'One Page Responsive', precio:25000, desc:'Todo en una sola página: quién sos, qué ofrecés, fotos y contacto. Se ve perfecto en celular.' },
-      { nombre:'Maquetación HTML/SCSS', precio:27000, desc:'Convierto tu diseño (Figma o imagen) en una web real, ordenada y lista para publicar.' },
-      { nombre:'UI Animada + Interacciones', precio:35000, desc:'Hago tu sitio más “vivo”: efectos suaves, carruseles, preguntas frecuentes y formularios completos.' },
-      { nombre:'Sitio Multipágina Básico', precio:65000, desc:'Sitio clásico de 5 secciones con menú arriba, páginas claras y formulario de contacto.' }
+      { nombre:'Landing Page Express', precio:25000, desc:'Una página simple que cuenta quién sos y tiene un botón grande a WhatsApp para que te contacten.' },
+      { nombre:'One Page Responsive', precio:45000, desc:'Todo en una sola página: quién sos, qué ofrecés, fotos y contacto. Se ve perfecto en celular.' },
+      { nombre:'Maquetación HTML/SCSS', precio:50000, desc:'Convierto tu diseño (Figma o imagen) en una web real, ordenada y lista para publicar.' },
+      { nombre:'UI Animada + Interacciones', precio:65000, desc:'Hago tu sitio más “vivo”: efectos suaves, carruseles, preguntas frecuentes y formularios completos.' },
+      { nombre:'Sitio Multipágina Básico', precio:125000, desc:'Sitio clásico de 5 secciones con menú arriba, páginas claras y formulario de contacto.' }
     ];
 
     function render(){
@@ -251,7 +278,7 @@
     /* ==== CALCULADORA DE INVERSIÓN ==== */
     const MIN_INV = 5000;
     const MAX_INV = 5000000;
-    const STEP = 10000;
+    const STEP = 20000; // ahora sube cada $20.000
 
     const FEATURES_FE = [
       'Currículum web (sección única) y archivo descargable',
@@ -299,11 +326,16 @@
       'Métricas de negocio (dashboards)'
     ];
 
+    // Tope monetario donde ya no se agregan más servicios (considerando el umbral BE de 300k)
+    const FE_CAP = MIN_INV + Math.max(0, (FEATURES_FE.length - 1)) * STEP;
+    const BE_CAP = 300000 + Math.max(0, (FEATURES_BE.length - 1)) * STEP;
+    const MAX_SERVICIOS = Math.max(FE_CAP, BE_CAP); // redirigimos a este valor si se supera
+
     function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
     function calcularAlcance(monto){
-      const m = clamp(monto, MIN_INV, MAX_INV);
-      const nivelesFE = Math.min(Math.floor((m - MIN_INV) / STEP) + 1, FEATURES_FE.length);
+      const m = clamp(monto, 0, MAX_INV); // permitimos escribir menor a 5000 para mostrar aviso
+      const nivelesFE = m < MIN_INV ? 0 : Math.min(Math.floor((m - MIN_INV) / STEP) + 1, FEATURES_FE.length);
       const soloFrontend = m < 300000;
       const nivelesBE = soloFrontend ? 0 : Math.min(Math.floor((m - 300000) / STEP) + 1, FEATURES_BE.length);
       const lista = [...FEATURES_FE.slice(0, nivelesFE), ...FEATURES_BE.slice(0, nivelesBE)];
@@ -311,54 +343,78 @@
     }
 
     function actualizarUIInversion(monto){
-      const { m, soloFrontend, lista } = calcularAlcance(monto);
-      document.getElementById('monto-input').value = m;
-      document.getElementById('monto-range').value = m;
+      const msgEl = document.getElementById('calc-msg');
+      msgEl.textContent = '';
+      msgEl.className = 'note';
+
+      let m = Number(monto||0);
+
+      if (m > MAX_SERVICIOS) {
+        m = MAX_SERVICIOS;
+        msgEl.textContent = `Se alcanzó el tope de servicios ofrecidos. Ajustamos a ${ARS.format(MAX_SERVICIOS)}.`;
+        msgEl.classList.add('note--info');
+      }
+
+      const { soloFrontend, lista } = calcularAlcance(m);
+
+      // Actualizar input con el valor (posiblemente ajustado)
+      const input = document.getElementById('monto-input');
+      input.value = m;
+
+      // Aviso si es menor al mínimo
+      if (m < MIN_INV) {
+        msgEl.textContent = 'La inversión mínima debe ser de $5.000.';
+        msgEl.classList.remove('note--info');
+        msgEl.classList.add('note--error');
+      }
+
       document.getElementById('monto-formateado').textContent = ARS.format(m);
       document.getElementById('alcance-label').textContent = soloFrontend ? 'Frontend' : 'Frontend + Backend';
 
+      // Render de features
       const ul = document.getElementById('lista-resultados');
       ul.innerHTML = '';
       lista.forEach(txt => { const li=document.createElement('li'); li.textContent=txt; ul.appendChild(li); });
 
-      const resumen = `Hola FigiKhan, quiero invertir ${ARS.format(m)}. Alcance: ${soloFrontend?'Frontend':'Frontend + Backend'}. Entregables: ${lista.slice(0,10).join(' • ')}${lista.length>10?' • ...':''}`;
+      // WhatsApp resumen (si es menor al mínimo, enviamos intención de consulta general)
+      const resumen = (m < MIN_INV)
+        ? `Hola FigiKhan, quiero invertir ${ARS.format(m)} pero veo que la inversión mínima es ${ARS.format(MIN_INV)}. ¿Me asesorás?`
+        : `Hola FigiKhan, quiero invertir ${ARS.format(m)}. Alcance: ${soloFrontend?'Frontend':'Frontend + Backend'}. Entregables: ${lista.slice(0,10).join(' • ')}${lista.length>10?' • ...':''}`;
+
       document.getElementById('btn-cotizar').href = WPP_BASE + encodeURIComponent(resumen);
     }
 
     function initCalculadora(){
       const input = document.getElementById('monto-input');
-      const range = document.getElementById('monto-range');
 
-      // valor inicial razonable
+      // Valor inicial
       const start = 5000;
       input.value = start;
-      range.value = start;
       actualizarUIInversion(start);
 
+      // Mientras escribe
       input.addEventListener('input', ()=>{
-        const v = Number(input.value||0);
+        const v = Number(input.value || 0);
         actualizarUIInversion(v);
       });
-      range.addEventListener('input', ()=>{
-        const v = Number(range.value);
-        actualizarUIInversion(v);
-      });
+
+      // Al salir del campo, hacemos "snap" suave al múltiplo de STEP más cercano por encima del mínimo
       input.addEventListener('change', ()=>{
-        // Snap al STEP
-        let v = clamp(Number(input.value||0), MIN_INV, MAX_INV);
-        if(v>MIN_INV){ v = MIN_INV + Math.round((v-MIN_INV)/STEP)*STEP; }
-        input.value = v;
+        let v = Number(input.value || 0);
+        if (v >= MIN_INV) {
+          const steps = Math.round((v - MIN_INV) / STEP);
+          v = MIN_INV + steps * STEP;
+        }
         actualizarUIInversion(v);
       });
     }
 
-    /* ==== Nav “cerrar en click” ==== */
-    // (el menú hamburguesa se retiró; se mantiene la lógica por si se reinstala)
-    // document.addEventListener('click',(e)=>{ ... });
-
     // Render y arranque
-    render();
-    initCalculadora();
+    function boot(){
+      render();
+      initCalculadora();
+    }
+    boot();
   </script>
 
   <!-- Overlay global (una sola vez, al final del body) -->
