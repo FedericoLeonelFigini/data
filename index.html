@@ -11,7 +11,6 @@
   <header class="site-header">
     <nav class="navbar container">
       <a href="#frontend" class="brand">FigiKhan</a>
-      <button class="burger" aria-label="Abrir menú" aria-expanded="false">☰</button>
       <ul class="nav-links">
         <li><a href="#frontend"></a></li>
       </ul>
@@ -28,10 +27,52 @@
     <!-- FRONTEND -->
     <section id="frontend" class="section">
       <h2></h2>
-      <p class="section-desc">
-        
-      </p>
+      <p class="section-desc"></p>
       <div class="grid" id="frontend-grid"></div>
+    </section>
+
+    <!-- NUEVA SECCIÓN: Calculadora de Inversión -->
+    <section id="inversion" class="section">
+      <div class="calc card">
+        <div class="card-head">
+          <span class="badge">Plan a medida</span>
+          <h3>¿Cuánto querés invertir en tu proyecto?</h3>
+          <p class="desc">
+            Ingresá un monto en ARS (mínimo $5.000). Cada <strong>$10.000</strong> sumamos mejoras.
+            Hasta <strong>$300.000</strong> es <em>Frontend</em> solamente. Desde <strong>$300.000</strong>, <em>Frontend + Backend</em>.
+          </p>
+        </div>
+        <div class="card-body">
+          <div class="calc-inputs">
+            <label class="calc-field">
+              <span>Monto (ARS)</span>
+              <input id="monto-input" type="number" min="5000" max="5000000" step="10000" placeholder="5000" />
+            </label>
+            <input id="monto-range" class="calc-range" type="range" min="5000" max="5000000" step="10000" />
+          </div>
+
+          <div class="calc-summary">
+            <div class="chip">
+              <span>Presupuesto:</span>
+              <strong id="monto-formateado">$ 5.000</strong>
+            </div>
+            <div class="chip">
+              <span>Alcance:</span>
+              <strong id="alcance-label">Frontend</strong>
+            </div>
+          </div>
+
+          <div class="calc-results">
+            <h4>Esto podemos desarrollar con tu inversión:</h4>
+            <ul id="lista-resultados" class="features"></ul>
+          </div>
+        </div>
+        <div class="card-foot">
+          <div class="actions">
+            <a id="btn-cotizar" class="btn" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- CTA AFILIADOS -->
@@ -49,18 +90,17 @@
     </section>
   </main>
 
-<footer class="site-footer">
-  <p>
-    © 2025 Data — Desarrollo web a medida ·
-    <a href="https://instagram.com/figi_khan" target="_blank" rel="noopener" aria-label="Abrir Instagram de FigiKhan">
-      Instagram
-       </a>
-       <a href="https://x.com/figikhan" target="_blank" rel="noopener" aria-label="Abrir Instagram de FigiKhan">
-      || X
-       </a>
-  </p>
-</footer>
-
+  <footer class="site-footer">
+    <p>
+      © 2025 Data — Desarrollo web a medida ·
+      <a href="https://instagram.com/figi_khan" target="_blank" rel="noopener" aria-label="Abrir Instagram de FigiKhan">
+        Instagram
+      </a>
+      <a href="https://x.com/figikhan" target="_blank" rel="noopener" aria-label="Abrir X de FigiKhan">
+        || X
+      </a>
+    </p>
+  </footer>
 
   <!-- Botón flotante WhatsApp -->
   <a
@@ -129,7 +169,7 @@
       ]
     };
 
-    /* ==== overlay corregido ==== */
+    /* ==== overlay corregido para tarjetas ==== */
     let currentOpenCard=null, overlay=null;
     function ensureOverlay(){
       if(!overlay){
@@ -192,10 +232,10 @@
 
     const FRONTEND_SERVICIOS=[
       { nombre:'Landing Page Express', precio:15000, desc:'Una página simple que cuenta quién sos y tiene un botón grande a WhatsApp para que te contacten.' },
-      { nombre:'One Page Responsive', precio:30000, desc:'Todo en una sola página: quién sos, qué ofrecés, fotos y contacto. Se ve perfecto en celular.' },
-      { nombre:'Maquetación HTML/SCSS', precio:45000, desc:'Convierto tu diseño (Figma o imagen) en una web real, ordenada y lista para publicar.' },
-      { nombre:'UI Animada + Interacciones', precio:80000, desc:'Hago tu sitio más “vivo”: efectos suaves, carruseles, preguntas frecuentes y formularios completos.' },
-      { nombre:'Sitio Multipágina Básico', precio:125000, desc:'Sitio clásico de 5 secciones con menú arriba, páginas claras y formulario de contacto.' }
+      { nombre:'One Page Responsive', precio:25000, desc:'Todo en una sola página: quién sos, qué ofrecés, fotos y contacto. Se ve perfecto en celular.' },
+      { nombre:'Maquetación HTML/SCSS', precio:27000, desc:'Convierto tu diseño (Figma o imagen) en una web real, ordenada y lista para publicar.' },
+      { nombre:'UI Animada + Interacciones', precio:35000, desc:'Hago tu sitio más “vivo”: efectos suaves, carruseles, preguntas frecuentes y formularios completos.' },
+      { nombre:'Sitio Multipágina Básico', precio:65000, desc:'Sitio clásico de 5 secciones con menú arriba, páginas claras y formulario de contacto.' }
     ];
 
     function render(){
@@ -208,20 +248,120 @@
       });
     }
 
-    /* ==== Nav móvil ==== */
-    const burger=document.querySelector('.burger');
-    const nav=document.querySelector('.nav-links');
-    burger.addEventListener('click',()=>{ const open=nav.classList.toggle('open'); burger.setAttribute('aria-expanded', open?'true':'false'); });
-    document.addEventListener('click',(e)=>{ if(e.target.closest('.nav-links a')){ nav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); } });
+    /* ==== CALCULADORA DE INVERSIÓN ==== */
+    const MIN_INV = 5000;
+    const MAX_INV = 5000000;
+    const STEP = 10000;
 
+    const FEATURES_FE = [
+      'Currículum web (sección única) y archivo descargable',
+      'Landing Page Express con CTA a WhatsApp',
+      'One Page Responsive (quién soy, servicios, trabajos, contacto)',
+      'UI animada suave (aparición al scroll, carrusel simple)',
+      'Formulario de contacto con validación',
+      'Galería de trabajos / portfolio básico',
+      'Sitio Multipágina básico (5 secciones)',
+      'Optimización de performance (Lighthouse 80+)',
+      'SEO básico: títulos, descripciones y Open Graph',
+      'Integración de Analytics y mapa de calor',
+      'Copy básico (hasta 500 palabras)',
+      'Optimización móvil y accesibilidad AA',
+      'Hosting estático + deploy (orientación)',
+      'Gestión de dominio .com.ar (orientación)',
+      'Soporte 30 días post-lanzamiento',
+      'Micro-landing para campañas',
+      'Sección de FAQs autoadministrable (estática)',
+      'Integración con redes sociales y chat',
+      'Componentes UI premium (tabs, acordeón, modales)',
+      'Biblioteca de iconos y animaciones sutiles'
+    ];
+
+    const FEATURES_BE = [
+      'Backend Node/Express base',
+      'Base de datos relacional (PostgreSQL)',
+      'Autenticación por email/contraseña',
+      'API REST (CRUD básico)',
+      'Panel de administración básico',
+      'Integración de pagos (Mercado Pago)',
+      'Notificaciones por email (transaccionales)',
+      'CMS headless (contenido dinámico)',
+      'Roles y permisos',
+      'Optimización de consultas y caché',
+      'Testing básico y CI',
+      'Dockerización y .env templates',
+      'Monitoreo y logs',
+      'Escalado y balanceo (plan de arquitectura)',
+      'CDN y políticas de seguridad (CORS/Rate limit)',
+      'Soporte extendido 90 días',
+      'Integraciones externas (maps, mailing, sheets)',
+      'Informe técnico y documentación de API',
+      'Backups y estrategia de recuperación',
+      'Métricas de negocio (dashboards)'
+    ];
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function calcularAlcance(monto){
+      const m = clamp(monto, MIN_INV, MAX_INV);
+      const nivelesFE = Math.min(Math.floor((m - MIN_INV) / STEP) + 1, FEATURES_FE.length);
+      const soloFrontend = m < 300000;
+      const nivelesBE = soloFrontend ? 0 : Math.min(Math.floor((m - 300000) / STEP) + 1, FEATURES_BE.length);
+      const lista = [...FEATURES_FE.slice(0, nivelesFE), ...FEATURES_BE.slice(0, nivelesBE)];
+      return { m, soloFrontend, lista };
+    }
+
+    function actualizarUIInversion(monto){
+      const { m, soloFrontend, lista } = calcularAlcance(monto);
+      document.getElementById('monto-input').value = m;
+      document.getElementById('monto-range').value = m;
+      document.getElementById('monto-formateado').textContent = ARS.format(m);
+      document.getElementById('alcance-label').textContent = soloFrontend ? 'Frontend' : 'Frontend + Backend';
+
+      const ul = document.getElementById('lista-resultados');
+      ul.innerHTML = '';
+      lista.forEach(txt => { const li=document.createElement('li'); li.textContent=txt; ul.appendChild(li); });
+
+      const resumen = `Hola FigiKhan, quiero invertir ${ARS.format(m)}. Alcance: ${soloFrontend?'Frontend':'Frontend + Backend'}. Entregables: ${lista.slice(0,10).join(' • ')}${lista.length>10?' • ...':''}`;
+      document.getElementById('btn-cotizar').href = WPP_BASE + encodeURIComponent(resumen);
+    }
+
+    function initCalculadora(){
+      const input = document.getElementById('monto-input');
+      const range = document.getElementById('monto-range');
+
+      // valor inicial razonable
+      const start = 5000;
+      input.value = start;
+      range.value = start;
+      actualizarUIInversion(start);
+
+      input.addEventListener('input', ()=>{
+        const v = Number(input.value||0);
+        actualizarUIInversion(v);
+      });
+      range.addEventListener('input', ()=>{
+        const v = Number(range.value);
+        actualizarUIInversion(v);
+      });
+      input.addEventListener('change', ()=>{
+        // Snap al STEP
+        let v = clamp(Number(input.value||0), MIN_INV, MAX_INV);
+        if(v>MIN_INV){ v = MIN_INV + Math.round((v-MIN_INV)/STEP)*STEP; }
+        input.value = v;
+        actualizarUIInversion(v);
+      });
+    }
+
+    /* ==== Nav “cerrar en click” ==== */
+    // (el menú hamburguesa se retiró; se mantiene la lógica por si se reinstala)
+    // document.addEventListener('click',(e)=>{ ... });
+
+    // Render y arranque
     render();
+    initCalculadora();
   </script>
+
   <!-- Overlay global (una sola vez, al final del body) -->
-<div id="overlay" aria-hidden="true"></div>
-
-
-  <!-- Repetí más .card según necesites -->
-</section>
-
+  <div id="overlay" aria-hidden="true"></div>
 </body>
 </html>
