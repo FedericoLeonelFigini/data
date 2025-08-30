@@ -3,421 +3,179 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FigiKhan • Servicios y precios</title>
-  <link rel="stylesheet" href="estilos.css" />
+  <title>FigiKhan • Inicio</title>
+  <link rel="stylesheet" href="inicio.css" />
 </head>
 <body>
-  <!-- Header / Nav -->
+  <!-- Header -->
   <header class="site-header">
     <nav class="navbar container">
-      <a href="#frontend" class="brand">FigiKhan</a>
+      <a href="#" class="brand" aria-label="FigiKhan">FigiKhan</a>
       <ul class="nav-links">
-        <li><a href="#frontend"></a></li>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+       <!-- <li><a href="proyectos.html">Proyectos</a></li>-->
       </ul>
     </nav>
   </header>
 
   <main class="container">
-    <!-- Hero -->
-    <section class="hero">
-      <h1>DATA</h1>
-      <p>Miramos hacia el futuro, potenciamos tus ideas y trabajamos en tus proyectos. Selecciona el plan que se ajuste a tus necesidades.</p>
+    <!-- Presentación de bienvenida -->
+    <section class="hero" id="inicio">
+      <h1 class="welcome-title">
+        Bienvenido a <span>FigiKhan</span>
+      </h1>
+      <p class="welcome-subtitle">
+        Diseñamos y desarrollamos experiencias web con foco en resultados reales.
+        Estrategia, código y detalles que convierten ideas en productos.
+      </p>
     </section>
 
-    <!-- FRONTEND -->
-    <section id="frontend" class="section">
-      <h2></h2>
-      <p class="section-desc"></p>
-      <div class="grid" id="frontend-grid"></div>
-    </section>
+    <!-- Slider -->
+    <section id="publicidad" class="section">
+      <h2 class="section-title">Promos y Novedades</h2>
 
-    <!-- CALCULADORA DE INVERSIÓN (sin barra) -->
-    <section id="inversion" class="section">
-      <div class="calc card">
-        <div class="card-head">
-          <span class="badge">Plan a medida</span>
-          <h3>¿Cuánto querés invertir?</h3>
-          <p class="desc">
-            Ingresá un monto en ARS. Los beneficios aumentan cada <strong>$20.000</strong>.
-            Hasta <strong>$300.000</strong> es <em>Frontend</em> solamente. Desde <strong>$300.000</strong>, <em>Frontend + Backend</em>.
-          </p>
+      <div class="ml-slider" id="ml-slider" aria-roledescription="carousel" aria-label="Promociones destacadas" tabindex="0">
+        <div class="ml-track" id="ml-track">
+          <!-- Slides reales (no clones) -->
+          <article class="ml-slide contain">
+            <img src="publicidad1.png" alt="Publicidad 1 — Septiembre con promociones" loading="lazy">
+          </article>
+          <article class="ml-slide">
+            <img src="publicidad2.png" alt="Publicidad 2" loading="lazy">
+          </article>
+          <article class="ml-slide">
+            <img src="publicidad3.png" alt="Publicidad 3" loading="lazy">
+          </article>
         </div>
-        <div class="card-body">
-          <div class="calc-inputs">
-            <label class="calc-field">
-              <span>Monto (ARS)</span>
-              <!-- Permitimos cualquier valor: validación en JS -->
-              <input id="monto-input" type="number" placeholder="5000" inputmode="numeric" />
-            </label>
-          </div>
 
-          <p id="calc-msg" class="note" aria-live="polite"></p>
+        <button class="ml-btn prev" aria-label="Anterior">‹</button>
+        <button class="ml-btn next" aria-label="Siguiente">›</button>
 
-          <div class="calc-summary">
-            <div class="chip">
-              <span>Presupuesto:</span>
-              <strong id="monto-formateado">$ 5.000</strong>
-            </div>
-            <div class="chip">
-              <span>Alcance:</span>
-              <strong id="alcance-label">Frontend</strong>
-            </div>
-          </div>
-
-          <div class="calc-results">
-            <h4>Esto podemos desarrollar con tu inversión:</h4>
-            <ul id="lista-resultados" class="features"></ul>
-          </div>
-        </div>
-        <div class="card-foot">
-          <div class="actions">
-            <a id="btn-cotizar" class="btn" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
-          </div>
-        </div>
+        <div class="ml-dots" id="ml-dots" role="tablist" aria-label="Paginación de promociones"></div>
       </div>
-    </section>
 
-    <!-- CTA AFILIADOS -->
-    <section id="afiliados" class="section">
-      <div class="cta">
-        <h2>¿Querés trabajar con nosotros?</h2>
-        <p>Llevante un 10% de la compra del cliente una vez que comience el trabajo.</p>
-        <a
-          class="btn"
-          target="_blank"
-          rel="noopener"
-          href="https://wa.me/541141999497?text=Hola%20FigiKhan%2C%20quiero%20trabajar%20con%20ustedes%20como%20afiliado%20y%20cobrar%20el%2010%25%20cuando%20inicie%20el%20proyecto."
-        >Anotarme ahora</a>
-      </div>
+      <p class="slider-hint"></p>
     </section>
   </main>
 
   <footer class="site-footer">
     <p>
       © 2025 Data — Desarrollo web a medida ·
-      <a href="https://instagram.com/figi_khan" target="_blank" rel="noopener" aria-label="Abrir Instagram de FigiKhan">
-        Instagram
-      </a>
-      <a href="https://x.com/figikhan" target="_blank" rel="noopener" aria-label="Abrir X de FigiKhan">
-        || X
-      </a>
+      <a href="https://instagram.com/figi_khan" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://x.com/figikhan" target="_blank" rel="noopener">X</a>
     </p>
   </footer>
 
-  <!-- Botón flotante WhatsApp -->
-  <a
-    class="btn-wpp"
-    href="https://wa.me/541141999497?text=Hola%20FigiKhan%2C%20quiero%20hacer%20una%20consulta."
-    target="_blank" rel="noopener" aria-label="Consultar por WhatsApp" title="Chatear por WhatsApp">
-    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-      <g transform="translate(8,8)">
-        <path fill="#ffffff" d="M24 0c13.25 0 24 10.75 24 24S37.25 48 24 48c-4.1 0-7.96-1.03-11.34-2.86L0 48l2.86-11.34C1.03 33.96 0 30.1 0 26 0 12.75 10.75 2 24 2Z"/>
-        <path fill="#0f1115" d="M33.8 31.6c-.7 1.9-2.6 3.8-4.5 4.4-1.1.3-2.4.2-3.7-.2-3.2-1-7.1-3.9-9.7-6.5-2.6-2.6-5.5-6.5-6.5-9.7-.5-1.3-.5-2.6-.2-3.7.6-1.9 2.5-3.8 4.4-4.5.5-.2 1-.1 1.4.3l4 4c.4.4.5 1 .2 1.5l-1.8 2.9c-.3.5-.3 1.1 0 1.7.6 1.1 1.8 2.7 3.3 4.2 1.5 1.5 3.2 2.7 4.2 3.3.5.3 1.2.3 1.7 0l2.9-1.8c.5-.3 1.1-.3 1.5.2l4 4c.4.4.5.9.3 1.4Z"/>
-      </g>
-    </svg>
-    <span class="sr-only">WhatsApp</span>
-  </a>
-
   <script>
-    /* ==== utilidades precios ==== */
-    const ARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
-    const WPP_BASE = 'https://wa.me/541141999497?text=';
-    function precioConTipo(base, tipo){ const mult={particular:1.0,negocios:1.5,empresa:2.5}[tipo] ?? 1.0; return Math.round(base*mult); }
-    function linkWpp(servicio, tipo, precioFinal){
-      const mensaje = `Hola FigiKhan, quiero consultar por: ${servicio} | Tipo: ${tipo.toUpperCase()} | Precio: ${ARS.format(precioFinal)}.`;
-      return WPP_BASE + encodeURIComponent(mensaje);
+  (function(){
+    const slider   = document.getElementById('ml-slider');
+    const track    = document.getElementById('ml-track');
+    const prevBtn  = slider.querySelector('.ml-btn.prev');
+    const nextBtn  = slider.querySelector('.ml-btn.next');
+    const dotsWrap = document.getElementById('ml-dots');
+
+    // Clonamos para loop suave
+    const originals = Array.from(track.children);
+    const firstClone = originals[0].cloneNode(true);
+    const lastClone  = originals[originals.length - 1].cloneNode(true);
+    track.insertBefore(lastClone, originals[0]);
+    track.appendChild(firstClone);
+
+    const slides = Array.from(track.children);   // incluye clones
+    const realCount = originals.length;
+
+    let index = 1;                 // arrancamos en el primer real
+    let timer = null;
+    const SPEED = 450;             // ms
+    const AUTOPLAY_MS = 5000;
+
+    function setTransition(on){
+      track.style.transition = on ? `transform ${SPEED}ms ease` : 'none';
+    }
+    function apply(){
+      track.style.transform = `translateX(-${index * 100}%)`;
     }
 
-    /* ==== textos frontend ==== */
-    const INFO_FRONTEND = {
-      'Landing Page Express': [
-        '¿Qué es? Una página simple para presentarte y conseguir contactos.',
-        'Ideal para: pizzería, peluquería, profe particular, entrenador, jardinería.',
-        'Incluye: sección principal, 3 beneficios, testimonios y botón grande a WhatsApp.',
-        'Ejemplo: “Reservá tu turno por WhatsApp” con un botón visible.',
-        'Tiempo estimado: 2 a 3 días hábiles.',
-        'Aclaración: no es tienda online (sin pagos).'
-      ],
-      'One Page Responsive': [
-        '¿Qué es? Todo tu contenido en una sola página que se ve bien en celular.',
-        'Ideal para: profesionales, emprendedores, artistas, oficios.',
-        'Incluye: Quién soy, Qué ofrezco, Galería/Trabajos, Contacto, redes sociales.',
-        'Ejemplo: página personal de un fotógrafo con sus mejores fotos y contacto.',
-        'Tiempo estimado: 3 a 5 días hábiles.',
-        'Aclaración: sin blog ni múltiples páginas internas.'
-      ],
-      'Maquetación HTML/CSS': [
-        '¿Qué es? Si ya tenés un diseño (Figma/imagen), lo convierto en una web real.',
-        'Ideal para: quienes ya tienen el diseño y necesitan verlo funcionando.',
-        'Incluye: estructura ordenada, estilos prolijos y que se vea bien en celular.',
-        'Ejemplo: tu diseñador te pasó un layout y querés publicarlo.',
-        'Entrega: archivos listos para subir al hosting.',
-        'Aclaración: no incluye redacción de textos ni búsqueda de fotos.'
-      ],
-      'UI Animada + Interacciones': [
-        '¿Qué es? Le doy vida a tu sitio con efectos suaves y componentes útiles.',
-        'Incluye: animaciones al hacer scroll, carrusel de fotos, preguntas frecuentes, modales y formularios con validación.',
-        'Ejemplo: estudio de yoga con secciones que aparecen suave y un carrusel de clases.',
-        'Beneficio: se ve moderno sin volverse “pesado”.',
-        'Aclaración: son efectos sutiles, no animaciones 3D.'
-      ],
-      'Sitio Multipágina Básico': [
-        '¿Qué es? Un sitio clásico con varias secciones en páginas separadas.',
-        'Incluye: Inicio, Quiénes somos, Servicios, Preguntas frecuentes, Contacto.',
-        'Ejemplo: negocio local con menú arriba, páginas claras y formulario.',
-        'Plus: textos listos para Google (títulos y descripciones principales).',
-        'Tiempo estimado: 5 a 7 días hábiles.',
-        'Aclaración: sin tienda ni blog avanzado.'
-      ]
-    };
+    // Dots
+    for (let i=0; i<realCount; i++){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', `Ir al slide ${i+1}`);
+      b.addEventListener('click', ()=>goTo(i+1, true)); // +1 por el clone inicial
+      dotsWrap.appendChild(b);
+    }
+    function updateDots(){
+      const dots = dotsWrap.querySelectorAll('button');
+      dots.forEach((d,i)=> d.classList.toggle('is-active', i === (index-1+realCount)%realCount));
+    }
 
-    /* ==== overlay para tarjetas ==== */
-    let currentOpenCard=null, overlay=null;
-    function ensureOverlay(){
-      if(!overlay){
-        overlay=document.createElement('div');
-        overlay.id='distort-overlay';
-        overlay.className='distort-overlay';
-        overlay.setAttribute('aria-hidden','true');
-        document.body.appendChild(overlay);
-        overlay.addEventListener('click',()=>{ if(currentOpenCard&&currentOpenCard._collapse) currentOpenCard._collapse(); });
-        window.addEventListener('keydown',(e)=>{ if(e.key==='Escape'&&currentOpenCard&&currentOpenCard._collapse) currentOpenCard._collapse(); });
+    function goTo(newIndex, user=false){
+      setTransition(true);
+      index = newIndex;
+      apply();
+      updateDots();
+      if (user) restartAutoplay();
+    }
+    function next(){ goTo(index + 1); }
+    function prev(){ goTo(index - 1); }
+
+    track.addEventListener('transitionend', ()=>{
+      // Si caemos en clones, saltamos sin transición al real correspondiente
+      if (index === 0){
+        setTransition(false);
+        index = realCount;
+        apply();
+        requestAnimationFrame(()=> setTransition(true));
+      } else if (index === slides.length - 1){
+        setTransition(false);
+        index = 1;
+        apply();
+        requestAnimationFrame(()=> setTransition(true));
       }
-    }
+    });
 
-    function crearLista(features){
-      const ul=document.createElement('ul'); ul.className='features';
-      features.forEach(f=>{ const li=document.createElement('li'); li.textContent=f; ul.appendChild(li); });
-      return ul;
-    }
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
 
-    function crearTarjeta({ nombre, descripcion, precioBase, categoria, infoExtra }){
-      const id=nombre.toLowerCase().replace(/\s+/g,'-').replace(/[^\w-]/g,'');
-      const tipoId=`tipo-${id}`;
-      const card=document.createElement('article');
-      card.className='card';
-      card.innerHTML=`
-        <div class="card-head">
-          <span class="badge">${categoria}</span>
-          <h3>${nombre}</h3>
-          <p class="desc">${descripcion}</p>
-        </div>
-        <div class="card-body">
-          <div class="tipos">
-            <label class="tipo"><input type="radio" name="${tipoId}" value="particular" checked /> Particular</label>
-            <label class="tipo"><input type="radio" name="${tipoId}" value="negocios" /> Negocios</label>
-            <label class="tipo"><input type="radio" name="${tipoId}" value="empresa" /> Empresa</label>
-          </div>
-          <div class="precio"><span>Precio:</span><strong class="monto" data-precio="${precioBase}">${ARS.format(precioBase)}</strong></div>
-          <div class="more" hidden aria-hidden="true"></div>
-        </div>
-        <div class="card-foot">
-          <div class="actions">
-            <button class="btn btn-outline btn-info" type="button" aria-expanded="false" aria-controls="more-${id}">Más info</button>
-            <a class="btn" target="_blank" rel="noopener">Consultar por WhatsApp</a>
-          </div>
-        </div>
-      `;
-      const more=card.querySelector('.more'); more.id=`more-${id}`; more.appendChild(crearLista(infoExtra));
-      const radios=card.querySelectorAll(`input[name="${tipoId}"]`);
-      const montoEl=card.querySelector('.monto');
-      const btnWpp=card.querySelector('.btn:not(.btn-outline)');
-      const btnInfo=card.querySelector('.btn-info');
+    // Teclado
+    slider.addEventListener('keydown', (e)=>{
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft')  prev();
+    });
 
-      function sync(){
-        const tipo=[...radios].find(r=>r.checked).value;
-        const base=Number(montoEl.dataset.precio);
-        const final=precioConTipo(base,tipo);
-        montoEl.textContent=ARS.format(final);
-        btnWpp.href=linkWpp(nombre,tipo,final);
+    // Autoplay
+    function startAutoplay(){ stopAutoplay(); timer = setInterval(next, AUTOPLAY_MS); }
+    function stopAutoplay(){ if (timer) clearInterval(timer); timer = null; }
+    function restartAutoplay(){ startAutoplay(); }
+    slider.addEventListener('mouseenter', stopAutoplay);
+    slider.addEventListener('mouseleave', startAutoplay);
+    slider.addEventListener('focusin', stopAutoplay);
+    slider.addEventListener('focusout', startAutoplay);
+
+    // Swipe móvil
+    let startX = null, swiped = false;
+    slider.addEventListener('touchstart', (e)=>{ startX = e.touches[0].clientX; swiped=false; }, {passive:true});
+    slider.addEventListener('touchmove', (e)=>{
+      if (startX == null) return;
+      const dx = e.touches[0].clientX - startX;
+      if (Math.abs(dx) > 40 && !swiped){
+        swiped = true;
+        dx < 0 ? next() : prev();
       }
-      radios.forEach(r=>r.addEventListener('change',sync)); sync();
+    }, {passive:true});
+    slider.addEventListener('touchend', ()=>{ startX=null; swiped=false; });
 
-      function expand(){
-        if(currentOpenCard&&currentOpenCard!==card&&currentOpenCard._collapse){currentOpenCard._collapse(true);}
-        ensureOverlay();
-        more.hidden=false; more.setAttribute('aria-hidden','false');
-        btnInfo.setAttribute('aria-expanded','true'); btnInfo.textContent='Menos info';
-        card.classList.add('card--focused'); overlay.classList.add('is-visible'); overlay.removeAttribute('aria-hidden');
-        document.body.classList.add('modal-active'); currentOpenCard=card;
-      }
-      function collapse(silent=false){
-        more.hidden=true; more.setAttribute('aria-hidden','true');
-        btnInfo.setAttribute('aria-expanded','false'); btnInfo.textContent='Más info';
-        card.classList.remove('card--focused');
-        if(currentOpenCard===card) currentOpenCard=null;
-        if(!currentOpenCard){
-          document.body.classList.remove('modal-active');
-          if(overlay){ overlay.classList.remove('is-visible'); overlay.setAttribute('aria-hidden','true'); }
-        }
-        if(!silent && overlay && overlay.focus) overlay.focus();
-      }
-      card._collapse=collapse;
-      btnInfo.addEventListener('click',()=>{ const isHidden=more.hasAttribute('hidden')||more.hidden; isHidden?expand():collapse(); });
-      return card;
-    }
+    // Init
+    setTransition(false);
+    apply();         // posiciona en el 1 (primer real)
+    requestAnimationFrame(()=> setTransition(true));
+    updateDots();
 
-    const FRONTEND_SERVICIOS=[
-      { nombre:'Landing Page Express', precio:25000, desc:'Una página simple que cuenta quién sos y tiene un botón grande a WhatsApp para que te contacten.' },
-      { nombre:'One Page Responsive', precio:45000, desc:'Todo en una sola página: quién sos, qué ofrecés, fotos y contacto. Se ve perfecto en celular.' },
-      { nombre:'Maquetación HTML/SCSS', precio:50000, desc:'Convierto tu diseño (Figma o imagen) en una web real, ordenada y lista para publicar.' },
-      { nombre:'UI Animada + Interacciones', precio:65000, desc:'Hago tu sitio más “vivo”: efectos suaves, carruseles, preguntas frecuentes y formularios completos.' },
-      { nombre:'Sitio Multipágina Básico', precio:125000, desc:'Sitio clásico de 5 secciones con menú arriba, páginas claras y formulario de contacto.' }
-    ];
-
-    function render(){
-      const fg=document.getElementById('frontend-grid');
-      FRONTEND_SERVICIOS.forEach(s=>{
-        fg.appendChild(crearTarjeta({
-          nombre:s.nombre, descripcion:s.desc, precioBase:s.precio,
-          categoria:'Frontend', infoExtra:INFO_FRONTEND[s.nombre]||['Detalles del servicio.']
-        }));
-      });
-    }
-
-    /* ==== CALCULADORA DE INVERSIÓN ==== */
-    const MIN_INV = 5000;
-    const MAX_INV = 5000000;
-    const STEP = 20000; // ahora sube cada $20.000
-
-    const FEATURES_FE = [
-      'Currículum web (sección única) y archivo descargable',
-      'Landing Page Express con CTA a WhatsApp',
-      'One Page Responsive (quién soy, servicios, trabajos, contacto)',
-      'UI animada suave (aparición al scroll, carrusel simple)',
-      'Formulario de contacto con validación',
-      'Galería de trabajos / portfolio básico',
-      'Sitio Multipágina básico (5 secciones)',
-      'Optimización de performance (Lighthouse 80+)',
-      'SEO básico: títulos, descripciones y Open Graph',
-      'Integración de Analytics y mapa de calor',
-      'Copy básico (hasta 500 palabras)',
-      'Optimización móvil y accesibilidad AA',
-      'Hosting estático + deploy (orientación)',
-      'Gestión de dominio .com.ar (orientación)',
-      'Soporte 30 días post-lanzamiento',
-      'Micro-landing para campañas',
-      'Sección de FAQs autoadministrable (estática)',
-      'Integración con redes sociales y chat',
-      'Componentes UI premium (tabs, acordeón, modales)',
-      'Biblioteca de iconos y animaciones sutiles'
-    ];
-
-    const FEATURES_BE = [
-      'Backend Node/Express base',
-      'Base de datos relacional (PostgreSQL)',
-      'Autenticación por email/contraseña',
-      'API REST (CRUD básico)',
-      'Panel de administración básico',
-      'Integración de pagos (Mercado Pago)',
-      'Notificaciones por email (transaccionales)',
-      'CMS headless (contenido dinámico)',
-      'Roles y permisos',
-      'Optimización de consultas y caché',
-      'Testing básico y CI',
-      'Dockerización y .env templates',
-      'Monitoreo y logs',
-      'Escalado y balanceo (plan de arquitectura)',
-      'CDN y políticas de seguridad (CORS/Rate limit)',
-      'Soporte extendido 90 días',
-      'Integraciones externas (maps, mailing, sheets)',
-      'Informe técnico y documentación de API',
-      'Backups y estrategia de recuperación',
-      'Métricas de negocio (dashboards)'
-    ];
-
-    // Tope monetario donde ya no se agregan más servicios (considerando el umbral BE de 300k)
-    const FE_CAP = MIN_INV + Math.max(0, (FEATURES_FE.length - 1)) * STEP;
-    const BE_CAP = 300000 + Math.max(0, (FEATURES_BE.length - 1)) * STEP;
-    const MAX_SERVICIOS = Math.max(FE_CAP, BE_CAP); // redirigimos a este valor si se supera
-
-    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-    function calcularAlcance(monto){
-      const m = clamp(monto, 0, MAX_INV); // permitimos escribir menor a 5000 para mostrar aviso
-      const nivelesFE = m < MIN_INV ? 0 : Math.min(Math.floor((m - MIN_INV) / STEP) + 1, FEATURES_FE.length);
-      const soloFrontend = m < 300000;
-      const nivelesBE = soloFrontend ? 0 : Math.min(Math.floor((m - 300000) / STEP) + 1, FEATURES_BE.length);
-      const lista = [...FEATURES_FE.slice(0, nivelesFE), ...FEATURES_BE.slice(0, nivelesBE)];
-      return { m, soloFrontend, lista };
-    }
-
-    function actualizarUIInversion(monto){
-      const msgEl = document.getElementById('calc-msg');
-      msgEl.textContent = '';
-      msgEl.className = 'note';
-
-      let m = Number(monto||0);
-
-      if (m > MAX_SERVICIOS) {
-        m = MAX_SERVICIOS;
-        msgEl.textContent = `Se alcanzó el tope de servicios ofrecidos. Ajustamos a ${ARS.format(MAX_SERVICIOS)}.`;
-        msgEl.classList.add('note--info');
-      }
-
-      const { soloFrontend, lista } = calcularAlcance(m);
-
-      // Actualizar input con el valor (posiblemente ajustado)
-      const input = document.getElementById('monto-input');
-      input.value = m;
-
-      // Aviso si es menor al mínimo
-      if (m < MIN_INV) {
-        msgEl.textContent = 'La inversión mínima debe ser de $5.000.';
-        msgEl.classList.remove('note--info');
-        msgEl.classList.add('note--error');
-      }
-
-      document.getElementById('monto-formateado').textContent = ARS.format(m);
-      document.getElementById('alcance-label').textContent = soloFrontend ? 'Frontend' : 'Frontend + Backend';
-
-      // Render de features
-      const ul = document.getElementById('lista-resultados');
-      ul.innerHTML = '';
-      lista.forEach(txt => { const li=document.createElement('li'); li.textContent=txt; ul.appendChild(li); });
-
-      // WhatsApp resumen (si es menor al mínimo, enviamos intención de consulta general)
-      const resumen = (m < MIN_INV)
-        ? `Hola FigiKhan, quiero invertir ${ARS.format(m)} pero veo que la inversión mínima es ${ARS.format(MIN_INV)}. ¿Me asesorás?`
-        : `Hola FigiKhan, quiero invertir ${ARS.format(m)}. Alcance: ${soloFrontend?'Frontend':'Frontend + Backend'}. Entregables: ${lista.slice(0,10).join(' • ')}${lista.length>10?' • ...':''}`;
-
-      document.getElementById('btn-cotizar').href = WPP_BASE + encodeURIComponent(resumen);
-    }
-
-    function initCalculadora(){
-      const input = document.getElementById('monto-input');
-
-      // Valor inicial
-      const start = 5000;
-      input.value = start;
-      actualizarUIInversion(start);
-
-      // Mientras escribe
-      input.addEventListener('input', ()=>{
-        const v = Number(input.value || 0);
-        actualizarUIInversion(v);
-      });
-
-      // Al salir del campo, hacemos "snap" suave al múltiplo de STEP más cercano por encima del mínimo
-      input.addEventListener('change', ()=>{
-        let v = Number(input.value || 0);
-        if (v >= MIN_INV) {
-          const steps = Math.round((v - MIN_INV) / STEP);
-          v = MIN_INV + steps * STEP;
-        }
-        actualizarUIInversion(v);
-      });
-    }
-
-    // Render y arranque
-    function boot(){
-      render();
-      initCalculadora();
-    }
-    boot();
+    // Respeta prefers-reduced-motion
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (!media.matches) startAutoplay();
+  })();
   </script>
-
-  <!-- Overlay global (una sola vez, al final del body) -->
-  <div id="overlay" aria-hidden="true"></div>
 </body>
 </html>
