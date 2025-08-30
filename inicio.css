@@ -180,3 +180,40 @@ body{
   width: auto;
   display: block;
 }
+
+/* ===== PARCHE INMEDIATO ===== */
+/* Fondo blanco sí o sí (rompe cualquier fondo viejo o imagen) */
+html, body{
+  background:#fff !important;
+}
+body{
+  background-image:none !important;
+  color:#0f1115 !important;
+}
+
+/* Header como en Servicios (y que el logo NO se agrande) */
+.site-header{
+  background:#fff !important;
+  border-bottom:1px solid rgba(0,0,0,.08) !important;
+}
+.brand{
+  display:inline-flex; align-items:center; gap:.5rem;
+  color:#0f1115 !important;
+  line-height:1;
+}
+.brand img, .logo{
+  height:48px !important;   /* ajustá a gusto (40–56px) */
+  width:auto !important;
+  display:block !important;
+  max-height:var(--header-h);
+}
+
+/* Secciones y slider sin “planchas” oscuras */
+.section, .hero, .container{ background:transparent !important; }
+.slider, .ml-slider, .slide, .ml-slide{ background:#fff !important; }
+.slide-caption{ background: rgba(0,0,0,.35); } /* puede quedar */
+.ml-dots button{ border-color:rgba(0,0,0,.3); background:rgba(0,0,0,.15); }
+
+/* Tipografías grises sobre blanco */
+.section-title, .welcome-title{ color:#0f1115 !important; }
+.welcome-subtitle, .site-footer, .features, .section-desc{ color:#4b5563 !important; }
