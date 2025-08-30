@@ -34,32 +34,33 @@
       </p>
     </section>
 
-    <!-- Slider -->
-    <section id="publicidad" class="section">
-      <h2 class="section-title">Promos y Novedades</h2>
+    <section class="section">
+  <h2 class="section-title">Promos y Novedades</h2>
 
-      <div class="ml-slider" id="ml-slider" aria-roledescription="carousel" aria-label="Promociones destacadas" tabindex="0">
-        <div class="ml-track" id="ml-track">
-          <!-- Slides reales (no clones) -->
-          <article class="ml-slide contain">
-            <img src="publicidad1.png" alt="Publicidad 1 — Septiembre con promociones" loading="lazy">
-          </article>
-          <article class="ml-slide">
-            <img src="publicidad2.png" alt="Publicidad 2" loading="lazy">
-          </article>
-          <article class="ml-slide">
-            <img src="publicidad3.png" alt="Publicidad 3" loading="lazy">
-          </article>
-        </div>
-
-        <button class="ml-btn prev" aria-label="Anterior">‹</button>
-        <button class="ml-btn next" aria-label="Siguiente">›</button>
-
-        <div class="ml-dots" id="ml-dots" role="tablist" aria-label="Paginación de promociones"></div>
+  <div class="ml-slider" id="promoSlider">
+    <button class="ml-btn prev" aria-label="Anterior">‹</button>
+    <div class="ml-track">
+      <!-- Slide 1 (contiene imagen completa) -->
+      <div class="ml-slide contain">
+        <img class="slide-img" src="publicidad1.png" alt="Septiembre de Promociones">
       </div>
+      <!-- Slide 2 -->
+      <div class="ml-slide">
+        <img class="slide-img" src="publicidad2.png" alt="Descuento en landing">
+      </div>
+      <!-- Slide 3 -->
+      <div class="ml-slide">
+        <img class="slide-img" src="publicidad3.png" alt="Hosting + Dominio">
+      </div>
+    </div>
+    <button class="ml-btn next" aria-label="Siguiente">›</button>
 
-      <p class="slider-hint"></p>
-    </section>
+    <div class="ml-dots" aria-label="Paginación"></div>
+  </div>
+
+  <p class="slider-hint">Desliza o tocá los puntos • Se pausa al tocar</p>
+</section>
+
   </main>
 
   <footer class="site-footer">
@@ -71,5 +72,81 @@
   </footer>
 
   <script src="slider.js"></script>
+  <script>
+(function(){
+  const slider = document.getElementById('promoSlider');
+  if(!slider) return;
+
+  const track = slider.querySelector('.ml-track');
+  const slides = Array.from(slider.querySelectorAll('.ml-slide'));
+  const btnPrev = slider.querySelector('.ml-btn.prev');
+  const btnNext = slider.querySelector('.ml-btn.next');
+  const dotsBox = slider.querySelector('.ml-dots');
+
+  let idx = 0;
+  let autoTimer = null;
+  const AUTOPLAY_MS = 4000;
+
+  // Crear dots
+  slides.forEach((_, i)=>{
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.addEventListener('click', ()=>goTo(i, true));
+    dotsBox.appendChild(b);
+  });
+
+  function updateUI(){
+    track.style.transition = 'transform .45s ease';
+    track.style.transform = `translateX(-${idx * 100}%)`;
+    dotsBox.querySelectorAll('button').forEach((d,i)=>{
+      d.classList.toggle('is-active', i===idx);
+    });
+  }
+
+  function goTo(i, manual=false){
+    idx = (i+slides.length) % slides.length;
+    updateUI();
+    if (manual) restartAutoplay();
+  }
+
+  function next(){ goTo(idx+1); }
+  function prev(){ goTo(idx-1); }
+
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
+
+  // Autoplay (pausa al interactuar / hover / touch)
+  function startAutoplay(){ stopAutoplay(); autoTimer = setInterval(next, AUTOPLAY_MS); }
+  function stopAutoplay(){ if(autoTimer){ clearInterval(autoTimer); autoTimer = null; } }
+  function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
+
+  slider.addEventListener('mouseenter', stopAutoplay);
+  slider.addEventListener('mouseleave', startAutoplay);
+  slider.addEventListener('touchstart', stopAutoplay, {passive:true});
+  slider.addEventListener('touchend', startAutoplay);
+
+  // Swipe en móvil
+  let x0=null, lock=false;
+  track.addEventListener('touchstart', e=>{ x0 = e.touches[0].clientX; lock=false; }, {passive:true});
+  track.addEventListener('touchmove', e=>{
+    if(x0==null || lock) return;
+    const dx = e.touches[0].clientX - x0;
+    if (Math.abs(dx) > 40){
+      lock = true;
+      dx>0 ? prev() : next();
+      x0 = null;
+    }
+  }, {passive:true});
+  track.addEventListener('touchend', ()=>{ x0=null; });
+
+  // Asegurar ancho correcto al cambiar tamaño
+  window.addEventListener('resize', ()=>updateUI());
+
+  // Arranque
+  updateUI();
+  startAutoplay();
+})();
+</script>
+
 </body>
 </html>
