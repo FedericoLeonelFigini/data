@@ -25,29 +25,64 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; color:var(--text);
+  margin:0; 
+  color:#000; /* texto oscuro para contraste con blanco */
   font-family:"Lucida Bright", Georgia, "Times New Roman", serif;
-  background:
-    linear-gradient(rgba(15,17,21,.85), rgba(15,17,21,.85)),
-    url("fondo3.png") center/cover fixed no-repeat;
-  line-height:1.55; padding-top:var(--header-h);
+  background:#fff; /* fondo blanco liso */
+  line-height:1.55; 
+  padding-top:var(--header-h);
+}
+
 }
 .container{ width:min(1100px,92%); margin-inline:auto; }
 
-/* Header */
+/* ===== Header unificado (como en Servicios) ===== */
 .site-header{
-  position:fixed; inset:0 0 auto 0; z-index:100;
-  background:linear-gradient(180deg, rgba(15,17,21,.92), rgba(15,17,21,.66));
-  backdrop-filter:blur(8px);
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  background: #fff;                /* fondo blanco */
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  backdrop-filter: blur(6px);
 }
-.navbar{ display:flex; align-items:center; gap:16px; padding:14px 0; }
-.brand{ font-weight:800; letter-spacing:.6px; color:var(--text); text-decoration:none; font-size:1.25rem; }
-.nav-links{ margin-left:auto; display:flex; gap:18px; list-style:none; padding:0; }
+
+.navbar{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+}
+
+.brand{
+  font-weight: 800;
+  letter-spacing: .6px;
+  color: #0f1115;                  /* texto oscuro */
+  text-decoration: none;
+  font-size: 1.25rem;
+}
+
+.nav-links{
+  margin-left: auto;
+  display: flex;
+  gap: 18px;
+  list-style: none;
+  padding: 0;
+}
+
 .nav-links a{
-  color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:10px;
-  transition:color .2s, background .2s, transform .2s;
+  color: #4b5563;                  /* gris */
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: color .2s, background .2s, transform .2s;
 }
-.nav-links a:hover{ color:var(--text); background:rgba(255,255,255,.06); transform:translateY(-1px); }
+
+.nav-links a:hover{
+  color: #0f1115;
+  background: rgba(0,0,0,.06);
+  transform: translateY(-1px);
+}
+
 
 /* Hero con efecto */
 .hero{ padding:46px 0 28px; text-align:center; position:relative; overflow:hidden; }
@@ -273,4 +308,10 @@ body{
 /* Accesibilidad: si el usuario prefiere reducir movimiento, sin autoplay ni animaciones */
 @media (prefers-reduced-motion: reduce){
   .ml-track{ transition:none !important; }
+}
+
+.logo {
+  height: 70px; /* ajustá el tamaño */
+  width: auto;
+  display: block;
 }

@@ -10,11 +10,14 @@
   <!-- Header -->
   <header class="site-header">
     <nav class="navbar container">
-      <a href="#" class="brand" aria-label="FigiKhan">FigiKhan</a>
+      <!-- Logo de la corona -->
+      <a href="#" class="brand" aria-label="FigiKhan">
+        <img src="logopng.png" alt="Logo FigiKhan" class="logo">
+      </a>
       <ul class="nav-links">
         <li><a href="index.html">Inicio</a></li>
         <li><a href="servicios.html">Servicios</a></li>
-       <!-- <li><a href="proyectos.html">Proyectos</a></li>-->
+        <!-- <li><a href="proyectos.html">Proyectos</a></li> -->
       </ul>
     </nav>
   </header>
@@ -67,115 +70,6 @@
     </p>
   </footer>
 
-  <script>
-  (function(){
-    const slider   = document.getElementById('ml-slider');
-    const track    = document.getElementById('ml-track');
-    const prevBtn  = slider.querySelector('.ml-btn.prev');
-    const nextBtn  = slider.querySelector('.ml-btn.next');
-    const dotsWrap = document.getElementById('ml-dots');
-
-    // Clonamos para loop suave
-    const originals = Array.from(track.children);
-    const firstClone = originals[0].cloneNode(true);
-    const lastClone  = originals[originals.length - 1].cloneNode(true);
-    track.insertBefore(lastClone, originals[0]);
-    track.appendChild(firstClone);
-
-    const slides = Array.from(track.children);   // incluye clones
-    const realCount = originals.length;
-
-    let index = 1;                 // arrancamos en el primer real
-    let timer = null;
-    const SPEED = 450;             // ms
-    const AUTOPLAY_MS = 5000;
-
-    function setTransition(on){
-      track.style.transition = on ? `transform ${SPEED}ms ease` : 'none';
-    }
-    function apply(){
-      track.style.transform = `translateX(-${index * 100}%)`;
-    }
-
-    // Dots
-    for (let i=0; i<realCount; i++){
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.setAttribute('aria-label', `Ir al slide ${i+1}`);
-      b.addEventListener('click', ()=>goTo(i+1, true)); // +1 por el clone inicial
-      dotsWrap.appendChild(b);
-    }
-    function updateDots(){
-      const dots = dotsWrap.querySelectorAll('button');
-      dots.forEach((d,i)=> d.classList.toggle('is-active', i === (index-1+realCount)%realCount));
-    }
-
-    function goTo(newIndex, user=false){
-      setTransition(true);
-      index = newIndex;
-      apply();
-      updateDots();
-      if (user) restartAutoplay();
-    }
-    function next(){ goTo(index + 1); }
-    function prev(){ goTo(index - 1); }
-
-    track.addEventListener('transitionend', ()=>{
-      // Si caemos en clones, saltamos sin transición al real correspondiente
-      if (index === 0){
-        setTransition(false);
-        index = realCount;
-        apply();
-        requestAnimationFrame(()=> setTransition(true));
-      } else if (index === slides.length - 1){
-        setTransition(false);
-        index = 1;
-        apply();
-        requestAnimationFrame(()=> setTransition(true));
-      }
-    });
-
-    prevBtn.addEventListener('click', prev);
-    nextBtn.addEventListener('click', next);
-
-    // Teclado
-    slider.addEventListener('keydown', (e)=>{
-      if (e.key === 'ArrowRight') next();
-      if (e.key === 'ArrowLeft')  prev();
-    });
-
-    // Autoplay
-    function startAutoplay(){ stopAutoplay(); timer = setInterval(next, AUTOPLAY_MS); }
-    function stopAutoplay(){ if (timer) clearInterval(timer); timer = null; }
-    function restartAutoplay(){ startAutoplay(); }
-    slider.addEventListener('mouseenter', stopAutoplay);
-    slider.addEventListener('mouseleave', startAutoplay);
-    slider.addEventListener('focusin', stopAutoplay);
-    slider.addEventListener('focusout', startAutoplay);
-
-    // Swipe móvil
-    let startX = null, swiped = false;
-    slider.addEventListener('touchstart', (e)=>{ startX = e.touches[0].clientX; swiped=false; }, {passive:true});
-    slider.addEventListener('touchmove', (e)=>{
-      if (startX == null) return;
-      const dx = e.touches[0].clientX - startX;
-      if (Math.abs(dx) > 40 && !swiped){
-        swiped = true;
-        dx < 0 ? next() : prev();
-      }
-    }, {passive:true});
-    slider.addEventListener('touchend', ()=>{ startX=null; swiped=false; });
-
-    // Init
-    setTransition(false);
-    apply();         // posiciona en el 1 (primer real)
-    requestAnimationFrame(()=> setTransition(true));
-    updateDots();
-
-    // Respeta prefers-reduced-motion
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (!media.matches) startAutoplay();
-  })();
-  </script>
+  <script src="slider.js"></script>
 </body>
 </html>

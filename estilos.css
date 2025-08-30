@@ -329,3 +329,106 @@ body.modal-active{ overflow:auto; }
 @media (min-width: 768px){
   .calc-inputs{ grid-template-columns: 320px; }
 }
+/* Logo corona en la barra */
+.logo{
+  height: 65 px;     /* ajustá el tamaño a tu gusto */
+  width: auto;
+  display: block;
+}
+
+/* Utilidad para ocultar texto solo visualmente (accesible para lectores de pantalla) */
+.sr-only{
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* Si tu .brand tenía estilos de tipografía, quitalos para que no afecten al <img> */
+.brand{
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  text-decoration: none;
+}
+/* ===== Modo claro: fondo blanco ===== */
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f6f8fb;
+  --card:#ffffff;
+  --text:#0f1115;
+  --muted:#4b5563;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+body{
+  background:#fff !important;      /* fondo blanco liso */
+  color:var(--text) !important;     /* texto oscuro */
+}
+
+/* Header sobre claro */
+.site-header{
+  background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.75)) !important;
+  backdrop-filter: blur(8px);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.brand{ color:var(--text) !important; }
+.nav-links a{ color:var(--muted) !important; }
+.nav-links a:hover{ color:var(--text) !important; background:rgba(0,0,0,.06); }
+
+/* Tarjetas y superficies */
+.card{
+  background: linear-gradient(180deg, rgba(0,0,0,.01), rgba(0,0,0,.00)), var(--card) !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+  box-shadow: var(--shadow) !important;
+}
+.card:hover{ border-color: rgba(143,211,255,.55) !important; box-shadow:0 16px 36px rgba(0,0,0,.12) !important; }
+.card .desc, .section-desc, .features, .tipo, .chip span{ color:var(--muted) !important; }
+
+/* Controles y chips */
+.precio, .chip{
+  background: rgba(0,0,0,.02) !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+}
+.btn-outline{
+  background:transparent !important;
+  color:var(--text) !important;
+  border:1px solid rgba(0,0,0,.18) !important;
+}
+
+/* CTA en claro */
+.cta{
+  background:#fff !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+  box-shadow: var(--shadow) !important;
+}
+.cta p{ color:var(--muted) !important; }
+
+/* Inputs de la calculadora */
+.calc-field input[type="number"]{
+  background:#fff !important;
+  border:1px solid rgba(0,0,0,.12) !important;
+  color:var(--text) !important;
+}
+.calc-range{
+  background: linear-gradient(90deg, rgba(143,211,255,.45), rgba(189,230,255,.25)) !important;
+  border:1px solid rgba(0,0,0,.12) !important;
+}
+.calc-results .features{ color:var(--muted) !important; }
+
+/* Overlay de enfoque (más suave en claro) */
+.distort-overlay{
+  background: rgba(0,0,0,.18) !important;
+  backdrop-filter: blur(2.5px) saturate(110%);
+}
+
+/* Slider: bordes en claro, fondo neutro */
+.slider, .ml-slider{
+  border:1px solid rgba(0,0,0,.08) !important;
+  background:#ffffff !important;
+}
+.ml-slide, .slide{ background:#ffffff !important; }
+
+/* Logo: corregimos unidad */
+.logo{ height:65px; width:auto; display:block; }
