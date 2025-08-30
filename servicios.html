@@ -4,23 +4,44 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FigiKhan • Servicios y precios</title>
-  <link rel="stylesheet" href="estilos.css" />
+
+  <!-- Tu hoja principal (cache-buster) -->
+  <link rel="stylesheet" href="estilos.css?v=12" />
+
+  <!-- Refuerzo mínimo: overlay encima y clickeable -->
+  <style>
+    .distort-overlay{
+      position: fixed !important; inset: 0 !important;
+      z-index: 200 !important;
+      background: rgba(0,0,0,.18) !important;
+      backdrop-filter: blur(2.5px) saturate(110%) !important;
+      opacity: 0 !important; pointer-events: none !important;
+      transition: opacity .18s ease !important;
+      animation: none !important;
+    }
+    .distort-overlay.is-visible{ opacity:1 !important; pointer-events:auto !important; }
+    .card--focused{ position:relative !important; z-index:201 !important; }
+    .logo{ height:65px; width:auto; display:block; }
+  </style>
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header">
-  <nav class="navbar container">
-    <a href="#inicio" class="brand" aria-label="FigiKhan">
-      <img src="logopng.png" alt="Logo FigiKhan" class="logo">
-      <span class="sr-only">FigiKhan</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Inicio</a></li>
-      <li><a href="servicios.html">Servicios</a></li>
-      <!-- <li><a href="proyectos.html">Proyectos</a></li>-->
-    </ul>
-  </nav>
-</header>
+    <nav class="navbar container">
+      <a href="#inicio" class="brand" aria-label="FigiKhan">
+        <img src="logopng.png" alt="Logo FigiKhan" class="logo" />
+        <span class="sr-only">FigiKhan</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <!-- <li><a href="proyectos.html">Proyectos</a></li> -->
+      </ul>
+    </nav>
+  </header>
 
+  <!-- Overlay global (UNO solo) -->
+  <div id="overlay" class="distort-overlay" aria-hidden="true"></div>
 
   <main class="container">
     <!-- Hero -->
@@ -47,6 +68,7 @@
             Este plan incluye entregables de <strong>Frontend</strong>.
           </p>
         </div>
+
         <div class="card-body">
           <div class="calc-inputs">
             <label class="calc-field">
@@ -73,15 +95,17 @@
             <ul id="lista-resultados" class="features"></ul>
           </div>
         </div>
+
         <div class="card-foot">
           <div class="actions">
+            <button class="btn btn-outline btn-info" type="button" aria-expanded="false">Más info</button>
             <a id="btn-cotizar" class="btn" target="_blank" rel="noopener">Cotizar por WhatsApp</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA AFILIADOS -->
+    <!-- CTA AFILIADOS (opcional) -->
     <section id="afiliados" class="section">
       <div class="cta">
         <h2>¿Querés trabajar con nosotros?</h2>
@@ -90,21 +114,19 @@
           class="btn"
           target="_blank"
           rel="noopener"
-          href="https://wa.me/541141999497?text=Hola%20FigiKhan%2C%20quiero%20trabajar%20con%20ustedes%20como%20afiliado%20y%20cobrar%20el%2010%25%20cuando%20inicie%20el%20proyecto."
-        >Anotarme ahora</a>
+          href="https://wa.me/541141999497?text=Hola%20FigiKhan%2C%20quiero%20trabajar%20con%20ustedes%20como%20afiliado%20y%20cobrar%20el%2010%25%20cuando%20inicie%20el%20proyecto.">
+          Anotarme ahora
+        </a>
       </div>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="site-footer">
     <p>
       © 2025 Data — Desarrollo web a medida ·
-      <a href="https://instagram.com/figi_khan" target="_blank" rel="noopener" aria-label="Abrir Instagram de FigiKhan">
-        Instagram
-      </a>
-      <a href="https://x.com/figikhan" target="_blank" rel="noopener" aria-label="Abrir X de FigiKhan">
-        || X
-      </a>
+      <a href="https://instagram.com/figi_khan" target="_blank" rel="noopener" aria-label="Abrir Instagram de FigiKhan">Instagram</a>
+      <a href="https://x.com/figikhan" target="_blank" rel="noopener" aria-label="Abrir X de FigiKhan"> || X</a>
     </p>
   </footer>
 
@@ -122,85 +144,64 @@
     <span class="sr-only">WhatsApp</span>
   </a>
 
+  <!-- ======================= JS ======================= -->
   <script>
-    /* ==== utilidades precios ==== */
+    /* ===== Utils ===== */
     const ARS = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
     const WPP_BASE = 'https://wa.me/541141999497?text=';
-    function precioConTipo(base, tipo){ const mult={particular:1.0,negocios:1.5,empresa:2.5}[tipo] ?? 1.0; return Math.round(base*mult); }
-    function linkWpp(servicio, tipo, precioFinal){
-      const mensaje = `Hola FigiKhan, quiero consultar por: ${servicio} | Tipo: ${tipo.toUpperCase()} | Precio: ${ARS.format(precioFinal)}.`;
-      return WPP_BASE + encodeURIComponent(mensaje);
-    }
+    const precioConTipo = (base, tipo) => Math.round(({particular:1.0, negocios:1.5, empresa:2.5}[tipo] ?? 1.0) * base);
+    const linkWpp = (servicio, tipo, precioFinal) =>
+      WPP_BASE + encodeURIComponent(`Hola FigiKhan, quiero consultar por: ${servicio} | Tipo: ${tipo.toUpperCase()} | Precio: ${ARS.format(precioFinal)}.`);
 
-    /* ==== textos frontend ==== */
+    /* ===== Contenido ===== */
     const INFO_FRONTEND = {
       'Landing Page Express': [
         '¿Qué es? Una página simple para presentarte y conseguir contactos.',
         'Ideal para: pizzería, peluquería, profe particular, entrenador, jardinería.',
         'Incluye: sección principal, 3 beneficios, testimonios y botón grande a WhatsApp.',
-        'Ejemplo: “Reservá tu turno por WhatsApp” con un botón visible.',
+        'Ejemplo: “Reservá tu turno por WhatsApp”.',
         'Tiempo estimado: 2 a 3 días hábiles.',
         'Aclaración: no es tienda online (sin pagos).'
       ],
       'One Page Responsive': [
-        '¿Qué es? Todo tu contenido en una sola página que se ve bien en celular.',
-        'Ideal para: profesionales, emprendedores, artistas, oficios.',
+        'Todo en una sola página que se ve bien en celular.',
         'Incluye: Quién soy, Qué ofrezco, Galería/Trabajos, Contacto, redes sociales.',
-        'Ejemplo: página personal de un fotógrafo con sus mejores fotos y contacto.',
-        'Tiempo estimado: 3 a 5 días hábiles.',
-        'Aclaración: sin blog ni múltiples páginas internas.'
+        'Tiempo estimado: 3 a 5 días hábiles.'
       ],
       'Maquetación HTML/CSS': [
-        '¿Qué es? Si ya tenés un diseño (Figma/imagen), lo convierto en una web real.',
-        'Ideal para: quienes ya tienen el diseño y necesitan verlo funcionando.',
-        'Incluye: estructura ordenada, estilos prolijos y que se vea bien en celular.',
-        'Ejemplo: tu diseñador te pasó un layout y querés publicarlo.',
-        'Entrega: archivos listos para subir al hosting.',
-        'Aclaración: no incluye redacción de textos ni búsqueda de fotos.'
+        'Convertimos tu diseño (Figma/imagen) en web real.',
+        'Entrega lista para hosting. Responsive y prolija.'
       ],
       'UI Animada + Interacciones': [
-        '¿Qué es? Le doy vida a tu sitio con efectos suaves y componentes útiles.',
-        'Incluye: animaciones al hacer scroll, carrusel de fotos, preguntas frecuentes, modales y formularios con validación.',
-        'Ejemplo: estudio de yoga con secciones que aparecen suave y un carrusel de clases.',
-        'Beneficio: se ve moderno sin volverse “pesado”.',
-        'Aclaración: son efectos sutiles, no animaciones 3D.'
+        'Efectos suaves al scroll, carrusel, FAQs, modales y formularios con validación.'
       ],
       'Sitio Multipágina Básico': [
-        '¿Qué es? Un sitio clásico con varias secciones en páginas separadas.',
-        'Incluye: Inicio, Quiénes somos, Servicios, Preguntas frecuentes, Contacto.',
-        'Ejemplo: negocio local con menú arriba, páginas claras y formulario.',
-        'Plus: textos listos para Google (títulos y descripciones principales).',
-        'Tiempo estimado: 5 a 7 días hábiles.',
-        'Aclaración: sin tienda ni blog avanzado.'
+        'Inicio, Quiénes somos, Servicios, Preguntas frecuentes, Contacto.',
+        'Incluye SEO básico en títulos y descripciones.'
       ]
     };
 
-    /* ==== overlay para tarjetas ==== */
-    let currentOpenCard=null, overlay=null;
-    function ensureOverlay(){
-      if(!overlay){
-        overlay=document.createElement('div');
-        overlay.id='distort-overlay';
-        overlay.className='distort-overlay';
-        overlay.setAttribute('aria-hidden','true');
-        document.body.appendChild(overlay);
-        overlay.addEventListener('click',()=>{ if(currentOpenCard&&currentOpenCard._collapse) currentOpenCard._collapse(); });
-        window.addEventListener('keydown',(e)=>{ if(e.key==='Escape'&&currentOpenCard&&currentOpenCard._collapse) currentOpenCard._collapse(); });
-      }
-    }
+    const FRONTEND_SERVICIOS = [
+      { nombre:'Landing Page Express', precio:25000, desc:'Una página simple que cuenta quién sos y tiene un botón grande a WhatsApp para que te contacten.' },
+      { nombre:'One Page Responsive', precio:45000, desc:'Todo en una sola página: quién sos, qué ofrecés, fotos y contacto. Se ve perfecto en celular.' },
+      { nombre:'Maquetación HTML/CSS', precio:50000, desc:'Convierto tu diseño (Figma o imagen) en una web real, ordenada y lista para publicar.' },
+      { nombre:'UI Animada + Interacciones', precio:65000, desc:'Efectos suaves, carruseles, FAQs y formularios completos.' },
+      { nombre:'Sitio Multipágina Básico', precio:125000, desc:'Sitio clásico de 5 secciones con menú y formulario.' }
+    ];
 
+    /* ===== Render de tarjetas ===== */
     function crearLista(features){
-      const ul=document.createElement('ul'); ul.className='features';
-      features.forEach(f=>{ const li=document.createElement('li'); li.textContent=f; ul.appendChild(li); });
+      const ul = document.createElement('ul'); ul.className = 'features';
+      features.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
       return ul;
     }
 
-    function crearTarjeta({ nombre, descripcion, precioBase, categoria, infoExtra }){
-      const id=nombre.toLowerCase().replace(/\s+/g,'-').replace(/[^\w-]/g,'');
-      const tipoId=`tipo-${id}`;
-      const card=document.createElement('article');
+    function crearTarjeta({ nombre, descripcion, precioBase, categoria }){
+      const id = nombre.toLowerCase().replace(/\s+/g,'-').replace(/[^\w-]/g,'');
+      const tipoName = `tipo-${id}`;
+      const card = document.createElement('article');
       card.className='card';
-      card.innerHTML=`
+      card.innerHTML = `
         <div class="card-head">
           <span class="badge">${categoria}</span>
           <h3>${nombre}</h3>
@@ -208,12 +209,14 @@
         </div>
         <div class="card-body">
           <div class="tipos">
-            <label class="tipo"><input type="radio" name="${tipoId}" value="particular" checked /> Particular</label>
-            <label class="tipo"><input type="radio" name="${tipoId}" value="negocios" /> Negocios</label>
-            <label class="tipo"><input type="radio" name="${tipoId}" value="empresa" /> Empresa</label>
+            <label class="tipo"><input type="radio" name="${tipoName}" value="particular" checked /> Particular</label>
+            <label class="tipo"><input type="radio" name="${tipoName}" value="negocios" /> Negocios</label>
+            <label class="tipo"><input type="radio" name="${tipoName}" value="empresa" /> Empresa</label>
           </div>
-          <div class="precio"><span>Precio:</span><strong class="monto" data-precio="${precioBase}">${ARS.format(precioBase)}</strong></div>
-          <div class="more" hidden aria-hidden="true"></div>
+          <div class="precio"><span>Precio:</span>
+            <strong class="monto" data-precio="${precioBase}">${ARS.format(precioBase)}</strong>
+          </div>
+          <div class="more" id="more-${id}" hidden aria-hidden="true"></div>
         </div>
         <div class="card-foot">
           <div class="actions">
@@ -222,68 +225,115 @@
           </div>
         </div>
       `;
-      const more=card.querySelector('.more'); more.id=`more-${id}`; more.appendChild(crearLista(infoExtra));
-      const radios=card.querySelectorAll(`input[name="${tipoId}"]`);
-      const montoEl=card.querySelector('.monto');
-      const btnWpp=card.querySelector('.btn:not(.btn-outline)');
-      const btnInfo=card.querySelector('.btn-info');
 
+      // Detalles
+      const more = card.querySelector('.more');
+      more.appendChild(crearLista(INFO_FRONTEND[nombre] || ['Detalles del servicio.']));
+
+      // Precio + WhatsApp
+      const radios = card.querySelectorAll(`input[name="${tipoName}"]`);
+      const montoEl = card.querySelector('.monto');
+      const btnWpp  = card.querySelector('.btn:not(.btn-outline)');
       function sync(){
-        const tipo=[...radios].find(r=>r.checked).value;
-        const base=Number(montoEl.dataset.precio);
-        const final=precioConTipo(base,tipo);
-        montoEl.textContent=ARS.format(final);
-        btnWpp.href=linkWpp(nombre,tipo,final);
+        const tipo = [...radios].find(r => r.checked).value;
+        const final = precioConTipo(Number(montoEl.dataset.precio), tipo);
+        montoEl.textContent = ARS.format(final);
+        btnWpp.href = linkWpp(nombre, tipo, final);
       }
-      radios.forEach(r=>r.addEventListener('change',sync)); sync();
+      radios.forEach(r => r.addEventListener('change', sync));
+      sync();
 
-      function expand(){
-        if(currentOpenCard&&currentOpenCard!==card&&currentOpenCard._collapse){currentOpenCard._collapse(true);}
-        ensureOverlay();
-        more.hidden=false; more.setAttribute('aria-hidden','false');
-        btnInfo.setAttribute('aria-expanded','true'); btnInfo.textContent='Menos info';
-        card.classList.add('card--focused'); overlay.classList.add('is-visible'); overlay.removeAttribute('aria-hidden');
-        document.body.classList.add('modal-active'); currentOpenCard=card;
-      }
-      function collapse(silent=false){
-        more.hidden=true; more.setAttribute('aria-hidden','true');
-        btnInfo.setAttribute('aria-expanded','false'); btnInfo.textContent='Más info';
-        card.classList.remove('card--focused');
-        if(currentOpenCard===card) currentOpenCard=null;
-        if(!currentOpenCard){
-          document.body.classList.remove('modal-active');
-          if(overlay){ overlay.classList.remove('is-visible'); overlay.setAttribute('aria-hidden','true'); }
-        }
-        if(!silent && overlay && overlay.focus) overlay.focus();
-      }
-      card._collapse=collapse;
-      btnInfo.addEventListener('click',()=>{ const isHidden=more.hasAttribute('hidden')||more.hidden; isHidden?expand():collapse(); });
       return card;
     }
 
-    const FRONTEND_SERVICIOS=[
-      { nombre:'Landing Page Express', precio:25000, desc:'Una página simple que cuenta quién sos y tiene un botón grande a WhatsApp para que te contacten.' },
-      { nombre:'One Page Responsive', precio:45000, desc:'Todo en una sola página: quién sos, qué ofrecés, fotos y contacto. Se ve perfecto en celular.' },
-      { nombre:'Maquetación HTML/SCSS', precio:50000, desc:'Convierto tu diseño (Figma o imagen) en una web real, ordenada y lista para publicar.' },
-      { nombre:'UI Animada + Interacciones', precio:65000, desc:'Hago tu sitio más “vivo”: efectos suaves, carruseles, preguntas frecuentes y formularios completos.' },
-      { nombre:'Sitio Multipágina Básico', precio:125000, desc:'Sitio clásico de 5 secciones con menú arriba, páginas claras y formulario de contacto.' }
-    ];
-
-    function render(){
-      const fg=document.getElementById('frontend-grid');
-      FRONTEND_SERVICIOS.forEach(s=>{
-        fg.appendChild(crearTarjeta({
-          nombre:s.nombre, descripcion:s.desc, precioBase:s.precio,
-          categoria:'Frontend', infoExtra:INFO_FRONTEND[s.nombre]||['Detalles del servicio.']
-        }));
+    function renderTarjetas(){
+      const grid = document.getElementById('frontend-grid');
+      FRONTEND_SERVICIOS.forEach(s => {
+        const card = crearTarjeta({ nombre: s.nombre, descripcion: s.desc, precioBase: s.precio, categoria: 'Frontend' });
+        grid.appendChild(card);
       });
     }
 
-    /* ==== CALCULADORA DE INVERSIÓN (SOLO FRONTEND) ==== */
-    const MIN_INV = 5000;
-    const MAX_INV = 5000000;
-    const STEP = 20000; // beneficios cada $20.000
+    /* ===== Cierre genérico (usado por varias rutas) ===== */
+    const overlayEl = document.getElementById('overlay');
 
+    function closeCard(card, silent=false){
+      if (!card) return;
+      const more = card.querySelector('.more');
+      const btn  = card.querySelector('.btn-info');
+      if (more){ more.hidden = true; more.setAttribute('aria-hidden','true'); }
+      if (btn){ btn.setAttribute('aria-expanded','false'); btn.textContent = 'Más info'; }
+      card.classList.remove('card--focused');
+
+      const stillOpen = document.querySelector('.card.card--focused');
+      if (!stillOpen){
+        overlayEl.classList.remove('is-visible'); overlayEl.setAttribute('aria-hidden','true');
+        document.body.classList.remove('modal-active');
+      }
+      if (!silent && overlayEl && overlayEl.focus) overlayEl.focus();
+    }
+
+    /* ===== Cierre automático: se arma al abrir ===== */
+    function armarCierreAuto(card){
+      // Deferimos para NO capturar el mismo click que abrió
+      setTimeout(() => {
+        const handler = (ev) => {
+          // Si el clic fue sobre el toggle, dejamos que el toggle maneje
+          const esToggle = ev.target.closest('.btn-info,[data-action="more"],[aria-controls^="more-"]');
+          if (esToggle) return;
+          closeCard(card);
+        };
+        // Registramos una sola vez, en captura (y con fallback por si pointerdown no dispara)
+        document.addEventListener('pointerdown', handler, { capture:true, once:true, passive:true });
+        document.addEventListener('click',       handler, { capture:true, once:true });
+      }, 0);
+    }
+
+    /* ===== Toggle abrir/cerrar (delegación) ===== */
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-info');
+      if (!btn) return;
+
+      const card = btn.closest('.card');
+      const more = card.querySelector('.more');
+
+      const isHidden = more.hasAttribute('hidden') || more.hidden;
+
+      if (isHidden) {
+        // Cerrar otra si estaba abierta
+        const openCard = document.querySelector('.card.card--focused');
+        if (openCard && openCard !== card) closeCard(openCard, true);
+
+        // ABRIR
+        more.hidden = false; more.setAttribute('aria-hidden','false');
+        btn.setAttribute('aria-expanded','true'); btn.textContent = 'Menos info';
+        card.classList.add('card--focused');
+        overlayEl.classList.add('is-visible'); overlayEl.setAttribute('aria-hidden','false');
+        document.body.classList.add('modal-active');
+
+        // >>> CIERRE AUTOMÁTICO EN EL PRÓXIMO CLIC <<<
+        armarCierreAuto(card);
+
+      } else {
+        // CERRAR
+        closeCard(card);
+      }
+    });
+
+    /* ===== Cerrar con overlay y Escape (extra) ===== */
+    overlayEl.addEventListener('click', () => {
+      const card = document.querySelector('.card.card--focused');
+      if (card) closeCard(card);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const card = document.querySelector('.card.card--focused');
+        if (card) closeCard(card);
+      }
+    });
+
+    /* ===== Calculadora ===== */
+    const MIN_INV = 5000, MAX_INV = 5000000, STEP = 20000;
     const FEATURES_FE = [
       'Currículum web (sección única) y archivo descargable',
       'Landing Page Express con CTA a WhatsApp',
@@ -306,54 +356,35 @@
       'Componentes UI premium (tabs, acordeón, modales)',
       'Biblioteca de iconos y animaciones sutiles'
     ];
+    const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
+    const MAX_SERVICIOS = MIN_INV + (FEATURES_FE.length - 1) * STEP;
 
-    // Tope calculado SOLO con frontend
-    const MAX_SERVICIOS = MIN_INV + Math.max(0, (FEATURES_FE.length - 1)) * STEP;
+    const calcMsg = () => document.getElementById('calc-msg');
+    const listar = (arr) => {
+      const ul = document.getElementById('lista-resultados'); ul.innerHTML = '';
+      arr.forEach(t => { const li = document.createElement('li'); li.textContent = t; ul.appendChild(li); });
+    };
 
-    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-    function calcularAlcance(monto){
-      const m = clamp(monto, 0, MAX_INV);
-      const nivelesFE = m < MIN_INV ? 0 : Math.min(Math.floor((m - MIN_INV) / STEP) + 1, FEATURES_FE.length);
-      const lista = FEATURES_FE.slice(0, nivelesFE);
-      return { m, lista };
+    function alcance(m){
+      const niveles = m < MIN_INV ? 0 : Math.min(Math.floor((m - MIN_INV)/STEP) + 1, FEATURES_FE.length);
+      return FEATURES_FE.slice(0, niveles);
     }
 
     function actualizarUIInversion(monto){
-      const msgEl = document.getElementById('calc-msg');
-      msgEl.textContent = '';
-      msgEl.className = 'note';
+      const msgEl = calcMsg(); msgEl.textContent = ''; msgEl.className = 'note';
 
       let m = Number(monto||0);
+      if (m > MAX_SERVICIOS){ m = MAX_SERVICIOS; msgEl.textContent = `Se alcanzó el tope de servicios ofrecidos. Ajustamos a ${ARS.format(MAX_SERVICIOS)}.`; msgEl.classList.add('note--info'); }
+      if (m < MIN_INV){ msgEl.textContent = 'La inversión mínima debe ser de $5.000.'; msgEl.classList.add('note--error'); }
 
-      if (m > MAX_SERVICIOS) {
-        m = MAX_SERVICIOS;
-        msgEl.textContent = `Se alcanzó el tope de servicios ofrecidos. Ajustamos a ${ARS.format(MAX_SERVICIOS)}.`;
-        msgEl.classList.add('note--info');
-      }
-
-      const { lista } = calcularAlcance(m);
-
-      const input = document.getElementById('monto-input');
-      input.value = m;
-
-      if (m < MIN_INV) {
-        msgEl.textContent = 'La inversión mínima debe ser de $5.000.';
-        msgEl.classList.remove('note--info');
-        msgEl.classList.add('note--error');
-      }
-
+      document.getElementById('monto-input').value = m;
       document.getElementById('monto-formateado').textContent = ARS.format(m);
       document.getElementById('alcance-label').textContent = 'Frontend';
-
-      const ul = document.getElementById('lista-resultados');
-      ul.innerHTML = '';
-      lista.forEach(txt => { const li=document.createElement('li'); li.textContent=txt; ul.appendChild(li); });
+      listar(alcance(m));
 
       const resumen = (m < MIN_INV)
         ? `Hola FigiKhan, quiero invertir ${ARS.format(m)} pero veo que la inversión mínima es ${ARS.format(MIN_INV)}. ¿Me asesorás?`
-        : `Hola FigiKhan, quiero invertir ${ARS.format(m)}. Alcance: Frontend. Entregables: ${lista.slice(0,10).join(' • ')}${lista.length>10?' • ...':''}`;
-
+        : `Hola FigiKhan, quiero invertir ${ARS.format(m)}. Alcance: Frontend. Entregables: ${alcance(m).slice(0,10).join(' • ')}${alcance(m).length>10?' • ...':''}`;
       document.getElementById('btn-cotizar').href = WPP_BASE + encodeURIComponent(resumen);
     }
 
@@ -362,15 +393,10 @@
       const start = 5000;
       input.value = start;
       actualizarUIInversion(start);
-
-      input.addEventListener('input', ()=>{
-        const v = Number(input.value || 0);
-        actualizarUIInversion(v);
-      });
-
-      input.addEventListener('change', ()=>{
-        let v = Number(input.value || 0);
-        if (v >= MIN_INV) {
+      input.addEventListener('input', () => actualizarUIInversion(Number(input.value||0)));
+      input.addEventListener('change', () => {
+        let v = Number(input.value||0);
+        if (v >= MIN_INV){
           const steps = Math.round((v - MIN_INV) / STEP);
           v = MIN_INV + steps * STEP;
         }
@@ -378,14 +404,9 @@
       });
     }
 
-    function boot(){
-      render();
-      initCalculadora();
-    }
-    boot();
+    /* Boot */
+    renderTarjetas();
+    initCalculadora();
   </script>
-
-  <!-- Overlay global (una sola vez, al final del body) -->
-  <div id="overlay" aria-hidden="true"></div>
 </body>
 </html>
